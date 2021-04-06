@@ -9,6 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.1.5",
+    "@stacks/connect": "^5",
+    "@stacks/connect-react": "^5.0.5",
+    "@stacks/profile": "^1.2.3",
+    "@stacks/ui": "^7.8.0",
+    "@stacks/ui-core": "^7.3.0",
+    "@stacks/ui-theme": "^7.5.0",
+    "@stacks/ui-utils": "^7.5.0",
     "next": "10.0.9",
     "react": "17.0.1",
     "react-dom": "17.0.1"

@@ -1,65 +1,96 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import {
+  AppConfig,
+  UserSession,
+  showConnect,
+  openContractCall,
+} from "@stacks/connect";
+import { Person } from "@stacks/profile";
+import { Button, Flex, Text } from "@stacks/ui";
+import { useState, useEffect } from "react";
+import { StacksTestnet, StacksMainnet } from '@stacks/network';
+
+
+const appConfig = new AppConfig(["store_write", "publish_data"]);
+const userSession = new UserSession({ appConfig });
 
 export default function Home() {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    if (userSession.isSignInPending()) {
+      userSession.handlePendingSignIn().then((userData) => {
+        window.history.replaceState({}, document.title, "/");
+        setUser(userData);
+      });
+    } else if (userSession.isUserSignedIn()) {
+      setUser(getUserData());
+    }
+  }, [userSession]);
+
   return (
-    <div className={styles.container}>
+    <Flex maxHeight="900px" flexDirection="column" p="loose">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Claim your first Bitcoin NFT</title>
       </Head>
+      <Text fontWeight={500} mt="64px" as="h1" fontSize="36px">
+        Claim your first Bitcoin NFT
+      </Text>
+      {Object.keys(user).length === 0 && (
+        <Button onClick={() => authenticate()}>Authenticate</Button>
+      )}
+      {Object.keys(user).length > 0 && showClaimSection(user)}
+    </Flex>
+  );
+}
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+function showClaimSection(user) {
+  return (
+    <>
+      <Text>Logged in as {user.profile.stxAddress.testnet}</Text>
+      <Button onClick={() => claimToken()}>Claim SWAG-100 NFT</Button>
+    </>
+  );
+}
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+async function claimToken() {
+  const options = {
+    contractAddress: "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0",
+    contractName: "swag-100",
+    functionName: "claim-swag",
+    functionArgs: [],
+    appDetails: {
+      name: "Bitcoin NFT on Stacks",
+      icon: window.location.origin + "/vercel.svg",
+    },
+    network: new StacksTestnet(),
+    onFinish: (data) => {
+      console.log("Stacks Transaction:", data.stacksTransaction);
+      console.log("Transaction ID:", data.txId);
+      console.log("Raw transaction:", data.txRaw);
+    },
+  };
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+  await openContractCall(options);
+}
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+function authenticate() {
+  showConnect({
+    appDetails: {
+      name: "Bitcoin NFT on Stacks",
+      icon: window.location.origin + "/vercel.svg",
+    },
+    redirectTo: "/",
+    finished: () => {
+      window.location.reload();
+    },
+    userSession: userSession,
+  });
+}
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+function getUserData() {
+  return userSession.loadUserData();
+}
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+function getPerson() {
+  return new Person(getUserData().profile);
 }
