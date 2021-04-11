@@ -5,8 +5,18 @@ import {
   showConnect,
   openContractCall,
 } from "@stacks/connect";
+import {
+  Container,
+  Flex,
+  Image,
+  Text,
+  Button,
+  Box,
+  Spacer,
+  Tag,
+} from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Person } from "@stacks/profile";
-import { Button, Flex, Text } from "@stacks/ui";
 import { useState, useEffect } from "react";
 import { StacksTestnet, StacksMainnet } from "@stacks/network";
 
@@ -27,27 +37,60 @@ export default function Home() {
   }, [userSession]);
 
   return (
-    <Flex maxHeight="900px" flexDirection="column" p="loose">
+    <Container maxW="xl" centerContent p="2">
       <Head>
         <title>Claim your first Bitcoin NFT</title>
+        <script
+          async
+          src="https://platform.twitter.com/widgets.js"
+          charset="utf-8"
+        ></script>
       </Head>
-      <Text fontWeight={500} mt="64px" as="h1" fontSize="36px">
-        Claim your first Bitcoin NFT
-      </Text>
-      {Object.keys(user).length === 0 && (
-        <Button onClick={() => authenticate()}>Authenticate</Button>
-      )}
-      {Object.keys(user).length > 0 && showClaimSection(user)}
-    </Flex>
+
+      <Flex>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          bg="gray.800"
+          fontWeight="semibold"
+          letterSpacing="wide"
+          fontSize="xs"
+          overflow="hidden"
+          position="relative"
+        >
+          <Tag position="absolute" top="10px" right="10px">
+            Limited to 100
+          </Tag>
+          <Image objectFit="cover" src="powerful.svg" bg="gray.500" alt="nft" />
+          <Box p="6" alignItems="center" m="2" d="flex">
+            <Text color="gray.100" fontSize="4xl" fontWeight="bold">
+              Claim Bitcoin NFT
+            </Text>
+            <Spacer />
+            {Object.keys(user).length === 0 && (
+              <Button onClick={() => authenticate()}>Authenticate</Button>
+            )}
+            {Object.keys(user).length > 0 && showClaimSection(user)}
+          </Box>
+        </Box>
+      </Flex>
+      <Box mt="12" width="100%" height="300px" overflow="scroll">
+        <a class="twitter-timeline" href="https://twitter.com/Stacks" />
+      </Box>
+    </Container>
   );
 }
 
 function showClaimSection(user) {
   return (
-    <>
-      <Text>Logged in as {user.profile.stxAddress.testnet}</Text>
-      <Button onClick={() => claimToken()}>Claim SWAG-100 NFT</Button>
-    </>
+    <Button
+      colorScheme="blue"
+      size="lg"
+      rightIcon={<ArrowForwardIcon />}
+      onClick={() => claimToken()}
+    >
+      Go
+    </Button>
   );
 }
 
