@@ -20,6 +20,10 @@ export default async (req, res) => {
     fee,
   };
 
+  // TODO: should be sponsored?
+  // check for contract id
+  // check account details
+
   const sponsoredTx = await sponsorTransaction(sponsorOptions);
 
   // for mainnet, use `StacksMainnet()`
