@@ -81,6 +81,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@blockstack/stacks-blockchain-api-types@^0.34.1":
+  version "0.34.2"
+  resolved "https://registry.yarnpkg.com/@blockstack/stacks-blockchain-api-types/-/stacks-blockchain-api-types-0.34.2.tgz#de65f6556f8b988784718aca0d8e14284a81d914"
+  integrity sha512-VNZcattjf5+7HigJhW+tLthlDbS++7y3S0drVCL5uyqmiRvXKeaN6pF1f9yDQ5B19m7xizCQPO15ZOtHf7fFqw==
+
 "@chakra-ui/accordion@1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@chakra-ui/accordion/-/accordion-1.2.1.tgz#2e48ed5e79c58d5915a807fc03a486f54325005a"
@@ -838,6 +843,18 @@
     jsontokens "^3.0.0"
     query-string "^6.13.1"
 
+"@stacks/blockchain-api-client@^0.55.3":
+  version "0.55.3"
+  resolved "https://registry.yarnpkg.com/@stacks/blockchain-api-client/-/blockchain-api-client-0.55.3.tgz#3f771c4046aca8bbfdd8489e5f0f45612e722b9f"
+  integrity sha512-FXCV6wuXDSLt7H17Nh3r7X9vkj/G3dmOoDdzF1KRQ0T3gbYscbEfqVxlvMHbon8xEIDNMsgDLjSreY312EpspQ==
+  dependencies:
+    "@blockstack/stacks-blockchain-api-types" "^0.34.1"
+    "@types/ws" "^7.4.0"
+    cross-fetch "^3.0.6"
+    eventemitter3 "^4.0.4"
+    jsonrpc-lite "^2.2.0"
+    ws "^7.4.0"
+
 "@stacks/common@^1.2.2":
   version "1.2.2"
   resolved "https://registry.npmjs.org/@stacks/common/-/common-1.2.2.tgz"
@@ -1041,6 +1058,13 @@
   version "3.0.0"
   resolved "https://registry.npmjs.org/@types/warning/-/warning-3.0.0.tgz"
   integrity sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=
+
+"@types/ws@^7.4.0":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.2.tgz#bfe739b5f8b3a39742605fbe415ae7e88ee614c8"
+  integrity sha512-PbeN0Eydl7LQl4OIav29YmkO2LxbVuz3nZD/kb19lOS+wLgIkRbWMNmU/QQR7ABpOJ7D7xDOU8co7iohObewrw==
+  dependencies:
+    "@types/node" "*"
 
 agent-base@5:
   version "5.1.1"
@@ -1790,6 +1814,11 @@ etag@1.8.1:
   resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+eventemitter3@^4.0.4:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
 events@^3.0.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
@@ -2130,6 +2159,11 @@ json5@^1.0.1:
   integrity sha512-aKS4WQjPenRxiQsC93MNfjx+nbF4PAdYzmd/1JIj8HYzqfbu86beTuNgXDzPknWk0n0uARlyewZo4s++ES36Ow==
   dependencies:
     minimist "^1.2.0"
+
+jsonrpc-lite@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/jsonrpc-lite/-/jsonrpc-lite-2.2.0.tgz#fb3aa9d292c8970eb7f83c6040c6554767bbc6a6"
+  integrity sha512-/cbbSxtZWs1O7R4tWqabrCM/t3N8qKUZMAg9IUqpPvUs6UyRvm6pCNYkskyKN/XU0UgffW+NY2ZRr8t0AknX7g==
 
 jsontokens@^3.0.0:
   version "3.0.0"
@@ -2644,6 +2678,13 @@ react-clientside-effect@^1.2.2:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
+react-confetti@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-6.0.1.tgz#d4f57b5a021dd908a6243b8f63b6009b00818d10"
+  integrity sha512-ZpOTBrqSNhWE4rRXCZ6E6U+wGd7iYHF5MGrqwikoiBpgBq9Akdu0DcLW+FdFnLjyZYC+VfAiV2KeFgYRMyMrkA==
+  dependencies:
+    tween-functions "^1.2.0"
+
 react-dom@17.0.1:
   version "17.0.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-17.0.1.tgz"
@@ -3111,6 +3152,11 @@ tty-browserify@0.0.0:
   resolved "https://registry.npmjs.org/tty-browserify/-/tty-browserify-0.0.0.tgz"
   integrity sha1-oVe6QC2iTpv5V/mqadUk7tQpAaY=
 
+tween-functions@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
+  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
+
 type-fest@^0.7.1:
   version "0.7.1"
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.7.1.tgz"
@@ -3235,6 +3281,11 @@ wif@^2.0.1, wif@^2.0.6:
   integrity sha1-CNP1IFbGZnkplyb63g1DKudLRwQ=
   dependencies:
     bs58check "<3.0.0"
+
+ws@^7.4.0:
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.5.tgz#a484dd851e9beb6fdb420027e3885e8ce48986c1"
+  integrity sha512-xzyu3hFvomRfXKH8vOFMU3OguG6oOvhXMo3xsGy3xWExqaM2dxBbVxuD99O7m3ZUFMvvscsZDqxfgMaRr/Nr1g==
 
 xtend@^4.0.0:
   version "4.0.2"

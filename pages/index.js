@@ -7,8 +7,6 @@ import {
 } from "@stacks/connect";
 import {
   Container,
-  Flex,
-  Image,
   Text,
   Button,
   Box,
@@ -18,18 +16,22 @@ import {
   StackDivider,
   Link,
 } from "@chakra-ui/react";
+import Confetti from "react-confetti";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
-import { Person } from "@stacks/profile";
 import { useState, useEffect } from "react";
 import { StacksTestnet, StacksMainnet } from "@stacks/network";
+import { callReadOnlyFunction, cvToValue } from "@stacks/transactions";
+import { Configuration, AccountsApi } from "@stacks/blockchain-api-client";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
 
-export default function Home() {
+export default function Home({ available }) {
   const [user, setUser] = useState({});
   const [tx, setTx] = useState("");
+  const [claimed, setClaimed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then((userData) => {
@@ -41,6 +43,13 @@ export default function Home() {
     }
   }, [userSession]);
 
+  // once user is set, check if already claimed NFT
+  useEffect(() => {
+    if (Object.keys(user).length > 0) {
+      setClaimed(checkIfClaimed(user.profile.stxAddress.testnet));
+    }
+  }, [user]);
+
   function renderClaimView() {
     return (
       <Box p="6" m="2" d="flex">
@@ -49,7 +58,7 @@ export default function Home() {
         </Text>
         <Spacer />
         {Object.keys(user).length === 0 && (
-          <Button onClick={() => authenticate()}>Authenticate</Button>
+          <Button onClick={() => authenticate()}>Get started</Button>
         )}
         {Object.keys(user).length > 0 && (
           <Button
@@ -69,14 +78,17 @@ export default function Home() {
   function renderFinishView() {
     return (
       <Box p="6" m="2" d="flex" flexDirection="column">
-        <VStack divider={<StackDivider borderColor="gray.200" w="100%" />} alignItems="initial">
+        <VStack
+          divider={<StackDivider borderColor="gray.200" w="100%" />}
+          alignItems="initial"
+        >
           <Box d="flex" p="2">
             <Text color="gray.100" fontSize="xl" fontWeight="bold">
               Display your NFT
             </Text>
             <Spacer />
             <Link
-              href={`https://explorer.stacks.co/txid/${tx}?chain=testnet`}
+              href={`https://explorer.stacks.co/address/${user.profile.stxAddress.testnet}?chain=testnet`}
               isExternal
             >
               <Button colorScheme="blue" rightIcon={<ExternalLinkIcon />}>
@@ -156,7 +168,7 @@ export default function Home() {
   function authenticate() {
     showConnect({
       appDetails: {
-        name: "Bitcoin NFT on Stacks",
+        name: "Bitcoin NFT",
         icon: window.location.origin + "/vercel.svg",
       },
       redirectTo: "/",
@@ -171,10 +183,6 @@ export default function Home() {
     return userSession.loadUserData();
   }
 
-  function getPerson() {
-    return new Person(getUserData().profile);
-  }
-
   return (
     <Container maxW="xl" p="2">
       <Head>
@@ -182,7 +190,7 @@ export default function Home() {
         <script
           async
           src="https://platform.twitter.com/widgets.js"
-          charset="utf-8"
+          charSet="utf-8"
         ></script>
       </Head>
 
@@ -196,16 +204,99 @@ export default function Home() {
         overflow="hidden"
         position="relative"
       >
-        <Tag position="absolute" top="10px" right="10px" colorScheme="orange">
-          Limited to 100
-        </Tag>
-        <Image objectFit="cover" src="powerful.svg" bg="gray.500" alt="nft" />
-        {tx === "" && renderClaimView()}
-        {tx !== "" && renderFinishView()}
+        {claimed && <Confetti height="550px" />}
+        {claimed && (
+          <Tag position="absolute" top="500px" left="23%" colorScheme="black">
+            {`Congrats! You got one of only 100 NFTs`}
+          </Tag>
+        )}
+        {!claimed && (
+          <Tag position="absolute" top="10px" right="10px" colorScheme="cyan">
+            {`Limited to 100! Only ${100 - available} left`}
+          </Tag>
+        )}
+        <Box bg="gray.500" alt="nft" objectFit="cover">
+          <video
+            width="auto"
+            height="100%"
+            src="nft1.webm"
+            type="video/webm"
+            preload="true"
+            autoPlay
+            loop
+            muted
+          />
+        </Box>
+        {tx === "" && !claimed && renderClaimView()}
+        {(tx !== "" || claimed) && renderFinishView()}
       </Box>
       <Box mt="12" width="100%" height="300px" overflow="scroll">
         <a className="twitter-timeline" href="https://twitter.com/Stacks" />
       </Box>
     </Container>
   );
+}
+
+async function checkIfClaimed(principal) {
+  const fetch = window.fetch.bind(window);
+
+  const apiConfig = new Configuration({
+    fetchApi: fetch,
+    // for mainnet, replace `testnet` with `mainnet`
+    basePath: "https://stacks-node-api.testnet.stacks.co", // defaults to http://localhost:3999
+  });
+
+  // initiate the /accounts API with the basepath and fetch library
+  const accountsApi = new AccountsApi(apiConfig);
+
+  // get transactions for a specific account
+  const assets = await accountsApi.getAccountAssets({
+    principal,
+  });
+
+  // check if `swag-100` is available
+  const swagAvailable = assets.results
+    .filter((asset) => asset.event_type === "non_fungible_token_asset")
+    .reduce((acc, nft) => {
+      if (
+        nft.asset.asset_id ===
+        "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0.swag-100::swag-100"
+      ) {
+        return acc + 1;
+      }
+
+      return acc;
+    }, 0);
+
+  return swagAvailable > 0;
+}
+
+async function getContractData() {
+  const contractAddress = "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0";
+  const contractName = "swag-100";
+  const functionName = "get-last-token-id";
+  const network = new StacksTestnet();
+
+  const options = {
+    contractAddress,
+    contractName,
+    functionName,
+    functionArgs: [],
+    network,
+    senderAddress: contractAddress,
+  };
+
+  const result = await callReadOnlyFunction(options);
+
+  return cvToValue(result);
+}
+
+export async function getStaticProps() {
+  const available = await getContractData();
+
+  return {
+    props: {
+      available: available.value,
+    },
+  };
 }
