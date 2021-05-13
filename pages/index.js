@@ -44,9 +44,12 @@ export default function Home({ available }) {
   }, [userSession]);
 
   // once user is set, check if already claimed NFT
-  useEffect(() => {
+  useEffect(async () => {
     if (Object.keys(user).length > 0) {
-      setClaimed(checkIfClaimed(user.profile.stxAddress.testnet));
+      const claimedCheck = await checkIfClaimed(
+        user.profile.stxAddress.testnet
+      );
+      setClaimed(claimedCheck);
     }
   }, [user]);
 
