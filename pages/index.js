@@ -206,7 +206,7 @@ export default function Home({ available }) {
       >
         {claimed && <Confetti height="550px" />}
         {claimed && (
-          <Tag position="absolute" top="500px" left="23%" colorScheme="black">
+          <Tag position="absolute" top="500px" left="23%" colorScheme="green">
             {`Congrats! You got one of only 100 NFTs`}
           </Tag>
         )}
