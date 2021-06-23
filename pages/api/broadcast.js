@@ -4,7 +4,7 @@ import {
   deserializeTransaction,
   broadcastTransaction,
 } from "@stacks/transactions";
-import { StacksTestnet, StacksMainnet } from "@stacks/network";
+import { StacksMainnet } from "@stacks/network";
 const BigNum = require("bn.js");
 
 export default async (req, res) => {
@@ -26,8 +26,7 @@ export default async (req, res) => {
 
   const sponsoredTx = await sponsorTransaction(sponsorOptions);
 
-  // for mainnet, use `StacksMainnet()`
-  const network = new StacksTestnet();
+  const network = new StacksMainnet();
   const resp = await broadcastTransaction(sponsoredTx, network);
 
   res.status(200).json({

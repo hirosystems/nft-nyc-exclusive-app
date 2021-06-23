@@ -19,12 +19,14 @@ import {
 import Confetti from "react-confetti";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import { StacksTestnet, StacksMainnet } from "@stacks/network";
+import { StacksMainnet } from "@stacks/network";
 import { callReadOnlyFunction, cvToValue } from "@stacks/transactions";
 import { Configuration, AccountsApi } from "@stacks/blockchain-api-client";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
+
+const network = new StacksMainnet();
 
 export default function Home({ available }) {
   const [user, setUser] = useState({});
@@ -47,7 +49,7 @@ export default function Home({ available }) {
   useEffect(async () => {
     if (Object.keys(user).length > 0) {
       const claimedCheck = await checkIfClaimed(
-        user.profile.stxAddress.testnet
+        user.profile.stxAddress.mainnet
       );
       setClaimed(claimedCheck);
     }
@@ -79,6 +81,7 @@ export default function Home({ available }) {
   }
 
   function renderFinishView() {
+    // TODO: Replace the tutorial URL once merged
     return (
       <Box p="6" m="2" d="flex" flexDirection="column">
         <VStack
@@ -91,7 +94,7 @@ export default function Home({ available }) {
             </Text>
             <Spacer />
             <Link
-              href={`https://explorer.stacks.co/address/${user.profile.stxAddress.testnet}?chain=testnet`}
+              href={`https://explorer.stacks.co/address/${user.profile.stxAddress.mainnet}?chain=mainnet`}
               isExternal
             >
               <Button colorScheme="blue" rightIcon={<ExternalLinkIcon />}>
@@ -119,7 +122,7 @@ export default function Home({ available }) {
             </Text>
             <Spacer />
             <Link
-              href="https://docs.blockstack.org/write-smart-contracts/overview"
+              href="https://blockstack-docs-git-feat-nft-onboarding-blockstack.vercel.app/write-smart-contracts/my-own-nft"
               isExternal
             >
               <Button colorScheme="blue" rightIcon={<ExternalLinkIcon />}>
@@ -144,7 +147,7 @@ export default function Home({ available }) {
         name: "Bitcoin NFT on Stacks",
         icon: window.location.origin + "/vercel.svg",
       },
-      network: new StacksTestnet(),
+      network,
       onFinish: async (data) => {
         console.log("Stacks Transaction:", data.stacksTransaction);
         console.log("Raw transaction:", data.txRaw);
@@ -245,8 +248,7 @@ async function checkIfClaimed(principal) {
 
   const apiConfig = new Configuration({
     fetchApi: fetch,
-    // for mainnet, replace `testnet` with `mainnet`
-    basePath: "https://stacks-node-api.testnet.stacks.co", // defaults to http://localhost:3999
+    basePath: "https://stacks-node-api.mainnet.stacks.co",
   });
 
   // initiate the /accounts API with the basepath and fetch library
@@ -278,7 +280,6 @@ async function getContractData() {
   const contractAddress = "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0";
   const contractName = "swag-100";
   const functionName = "get-last-token-id";
-  const network = new StacksTestnet();
 
   const options = {
     contractAddress,
