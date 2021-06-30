@@ -138,8 +138,8 @@ export default function Home({ available }) {
   async function claimToken() {
     setIsLoading(true);
     const options = {
-      contractAddress: "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0",
-      contractName: "swag-100",
+      contractAddress: "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR",
+      contractName: "swag-1000",
       functionName: "claim-swag",
       sponsored: true,
       functionArgs: [],
@@ -259,13 +259,13 @@ async function checkIfClaimed(principal) {
     principal,
   });
 
-  // check if `swag-100` is available
+  // check if `swag-1000` is available
   const swagAvailable = assets.results
     .filter((asset) => asset.event_type === "non_fungible_token_asset")
     .reduce((acc, nft) => {
       if (
         nft.asset.asset_id ===
-        "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0.swag-100::swag-100"
+        "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR.swag-1000::swag-1000"
       ) {
         return acc + 1;
       }
@@ -277,8 +277,8 @@ async function checkIfClaimed(principal) {
 }
 
 async function getContractData() {
-  const contractAddress = "ST2D2YSXSNFVXJDWYZ4QWJVBXC590XSRV5AMMCW0";
-  const contractName = "swag-100";
+  const contractAddress = "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR";
+  const contractName = "swag-1000";
   const functionName = "get-last-token-id";
 
   const options = {
