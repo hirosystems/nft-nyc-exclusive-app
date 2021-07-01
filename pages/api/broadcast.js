@@ -26,8 +26,10 @@ export default async (req, res) => {
 
   const sponsoredTx = await sponsorTransaction(sponsorOptions);
 
-  const network = new StacksMainnet();
-  const resp = await broadcastTransaction(sponsoredTx, network);
+  console.log(deserializedTx);
+
+  // const network = new StacksMainnet();
+  const resp = ""; // await broadcastTransaction(sponsoredTx, network);
 
   res.status(200).json({
     txid: resp,

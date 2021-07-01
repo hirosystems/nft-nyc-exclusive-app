@@ -145,18 +145,18 @@ export default function Home({ available }) {
       functionArgs: [],
       appDetails: {
         name: "Bitcoin NFT on Stacks",
-        icon: window.location.origin + "/vercel.svg",
+        icon: window.location.origin + "/hiro-icon-black.png",
       },
       network,
-      onFinish: async (data) => {
+      onFinish: (data) => {
         console.log("Stacks Transaction:", data.stacksTransaction);
         console.log("Raw transaction:", data.txRaw);
 
-        const resp = await signSponsoredTx(data.txRaw);
+        //const resp = await signSponsoredTx(data.txRaw);
 
-        console.log(resp);
+        //console.log(resp);
 
-        setTx(resp.txid);
+        //setTx(resp.txid);
         setIsLoading(false);
       },
     };
@@ -175,7 +175,7 @@ export default function Home({ available }) {
     showConnect({
       appDetails: {
         name: "Bitcoin NFT",
-        icon: window.location.origin + "/vercel.svg",
+        icon: window.location.origin + "/hiro-icon-black.png",
       },
       redirectTo: "/",
       finished: () => {
@@ -193,7 +193,6 @@ export default function Home({ available }) {
     <Container maxW="xl" p="2">
       <Head>
         <title>Claim your first Bitcoin NFT</title>
-
       </Head>
 
       <Box
