@@ -193,11 +193,7 @@ export default function Home({ available }) {
     <Container maxW="xl" p="2">
       <Head>
         <title>Claim your first Bitcoin NFT</title>
-        <script
-          async
-          src="https://platform.twitter.com/widgets.js"
-          charSet="utf-8"
-        ></script>
+
       </Head>
 
       <Box
@@ -235,9 +231,6 @@ export default function Home({ available }) {
         </Box>
         {tx === "" && !claimed && renderClaimView()}
         {(tx !== "" || claimed) && renderFinishView()}
-      </Box>
-      <Box mt="12" width="100%" height="300px" overflow="scroll">
-        <a className="twitter-timeline" href="https://twitter.com/Stacks" />
       </Box>
     </Container>
   );
