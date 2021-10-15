@@ -19,14 +19,15 @@ import {
 import Confetti from "react-confetti";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import { StacksMainnet } from "@stacks/network";
+import { StacksMainnet, StacksMocknet } from "@stacks/network";
 import { callReadOnlyFunction, cvToValue } from "@stacks/transactions";
 import { Configuration, AccountsApi } from "@stacks/blockchain-api-client";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
 
-const network = new StacksMainnet();
+// set to DevNet if in development
+const network = process.env.NODE_ENV === "development" ? new StacksMocknet() : new StacksMainnet();
 
 export default function Home({ available }) {
   const [user, setUser] = useState({});
@@ -59,7 +60,7 @@ export default function Home({ available }) {
     return (
       <Box p="6" m="2" d="flex">
         <Text color="gray.100" fontSize="4xl" fontWeight="bold">
-          Claim Bitcoin NFT
+          Claim Exclusive Bitcoin NFT
         </Text>
         <Spacer />
         {Object.keys(user).length === 0 && (
@@ -81,7 +82,6 @@ export default function Home({ available }) {
   }
 
   function renderFinishView() {
-    // TODO: Replace the tutorial URL once merged
     return (
       <Box p="6" m="2" d="flex" flexDirection="column">
         <VStack
@@ -94,7 +94,7 @@ export default function Home({ available }) {
             </Text>
             <Spacer />
             <Link
-              href={`https://explorer.stacks.co/address/${user.profile.stxAddress.mainnet}?chain=mainnet`}
+              href={`https://explorer.stacks.co/address/${user.profile.stxAddress.mainnet}`}
               isExternal
             >
               <Button colorScheme="blue" rightIcon={<ExternalLinkIcon />}>
@@ -122,7 +122,7 @@ export default function Home({ available }) {
             </Text>
             <Spacer />
             <Link
-              href="https://blockstack-docs-git-feat-nft-onboarding-blockstack.vercel.app/write-smart-contracts/my-own-nft"
+              href="https://docs.hiro.so/docs/tutorials/clarity-nft"
               isExternal
             >
               <Button colorScheme="blue" rightIcon={<ExternalLinkIcon />}>
@@ -138,25 +138,20 @@ export default function Home({ available }) {
   async function claimToken() {
     setIsLoading(true);
     const options = {
-      contractAddress: "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR",
-      contractName: "swag-1000",
+      contractAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+      contractName: "nft-nyc-exclusive",
       functionName: "claim-swag",
-      sponsored: true,
       functionArgs: [],
       appDetails: {
-        name: "Bitcoin NFT on Stacks",
+        name: "Exclusive Bitcoin NFT for NFT.NYC",
         icon: window.location.origin + "/hiro-icon-black.png",
       },
       network,
       onFinish: (data) => {
-        console.log("Stacks Transaction:", data.stacksTransaction);
-        console.log("Raw transaction:", data.txRaw);
+        console.log('Transaction ID:', data.txId);
+        console.log('Raw transaction:', data.txRaw);
 
-        //const resp = await signSponsoredTx(data.txRaw);
-
-        //console.log(resp);
-
-        //setTx(resp.txid);
+        setTx(data.txId);
         setIsLoading(false);
       },
     };
@@ -164,17 +159,10 @@ export default function Home({ available }) {
     await openContractCall(options);
   }
 
-  async function signSponsoredTx(txRaw) {
-    const res = await fetch(`/api/broadcast?txRaw=${txRaw}`);
-    const data = await res.json();
-
-    return data;
-  }
-
   function authenticate() {
     showConnect({
       appDetails: {
-        name: "Bitcoin NFT",
+        name: "Exclusive Bitcoin NFT for NFT.NYC",
         icon: window.location.origin + "/hiro-icon-black.png",
       },
       redirectTo: "/",
@@ -192,7 +180,7 @@ export default function Home({ available }) {
   return (
     <Container maxW="xl" p="2">
       <Head>
-        <title>Claim your first Bitcoin NFT</title>
+        <title>Claim your exclusive Bitcoin NFT</title>
       </Head>
 
       <Box
@@ -228,8 +216,8 @@ export default function Home({ available }) {
             muted
           />
         </Box>
-        {tx === "" && !claimed && renderClaimView()}
-        {(tx !== "" || claimed) && renderFinishView()}
+        {tx === "" && claimed && renderClaimView()}
+        {(tx !== "" || !claimed) && renderFinishView()}
       </Box>
     </Container>
   );
@@ -240,7 +228,7 @@ async function checkIfClaimed(principal) {
 
   const apiConfig = new Configuration({
     fetchApi: fetch,
-    basePath: "https://stacks-node-api.mainnet.stacks.co",
+    basePath: process.env.NODE_ENV === "development" ? "http://localhost:3999" : "https://stacks-node-api.mainnet.stacks.co",
   });
 
   // initiate the /accounts API with the basepath and fetch library
@@ -251,13 +239,13 @@ async function checkIfClaimed(principal) {
     principal,
   });
 
-  // check if `swag-1000` is available
+  // check if `nft-nyc-exclusive` is available
   const swagAvailable = assets.results
     .filter((asset) => asset.event_type === "non_fungible_token_asset")
     .reduce((acc, nft) => {
       if (
         nft.asset.asset_id ===
-        "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR.swag-1000::swag-1000"
+        "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-nyc-exclusive::nft-nyc-exclusive"
       ) {
         return acc + 1;
       }
@@ -269,8 +257,8 @@ async function checkIfClaimed(principal) {
 }
 
 async function getContractData() {
-  const contractAddress = "SPPEYAEM28YFZ2SJWTZRFK1B6MAZV09PB0TQPDR";
-  const contractName = "swag-1000";
+  const contractAddress = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
+  const contractName = "nft-nyc-exclusive";
   const functionName = "get-last-token-id";
 
   const options = {
