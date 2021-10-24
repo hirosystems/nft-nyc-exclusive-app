@@ -11,18 +11,22 @@
   "dependencies": {
     "@chakra-ui/icons": "^1.0.16",
     "@chakra-ui/react": "^1.6.10",
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11",
     "@stacks/blockchain-api-client": "^0.69.0",
     "@stacks/connect": "^6.2.0",
+    "@stacks/network": "^2.0.1",
     "@stacks/profile": "^2.0.1",
     "@stacks/transactions": "^2.0.1",
+    "@stacks/ui": "^7.10.0",
     "bn.js": "^5.2.0",
-    "framer-motion": "^4.1.17",
-    "next": "11.1.2",
-    "react": "17.0.2",
+    "detect-node": "^2.1.0",
+    "framer-motion": "^4",
+    "jotai": "^1.4.0",
+    "next": "^11.1.2",
+    "react": "^17.0.2",
     "react-confetti": "^6.0.1",
-    "react-dom": "17.0.2"
+    "react-dom": "^17.0.2"
   },
   "repository": {
     "type": "git",
@@ -33,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/agraebe/nft-nyc-exclusive-app/issues"
   },
-  "homepage": "https://github.com/agraebe/nft-nyc-exclusive-app#readme"
+  "homepage": "https://github.com/agraebe/nft-nyc-exclusive-app#readme",
+  "devDependencies": {
+    "@types/react": "^17.0.31"
+  }
 }
