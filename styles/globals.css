@@ -2,8 +2,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "OpenSauceOneRegular";
+  background-color: white !important;
 }
 
 a {
@@ -13,4 +13,50 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.claimTag {
+  border-radius: 90px !important;
+  background: rgba(27, 32, 43, 0.93) !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+  padding: 10px !important;
+  color: #fff !important;
+}
+
+.headerLabel {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 32px;
+  line-height: 44px;
+  /* or 137% */
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.02em;
+  font-feature-settings: 'ss01'on;
+
+  /* Grey/Black */
+  color: #0C0C0D;
+}
+
+.primaryButton {
+  width: 100% !important;
+  padding: 16px 32px;
+  background: #5546FF !important;
+  border-radius: 10px !important;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  text-align: center;
+  letter-spacing: -0.01em;
+  color: #FFFFFF !important;
+}
+
+.subText {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: #74777D !important;
 }

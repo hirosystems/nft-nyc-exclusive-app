@@ -11,7 +11,6 @@ import {
   Button,
   Box,
   Spacer,
-  Tag,
   VStack,
   StackDivider,
   Link,
@@ -23,16 +22,24 @@ import { StacksMainnet, StacksMocknet } from "@stacks/network";
 import { callReadOnlyFunction, cvToValue } from "@stacks/transactions";
 import { Configuration, AccountsApi } from "@stacks/blockchain-api-client";
 
+import Header from "../components/Header";
+import NFTPreview from "../components/nftpreview";
+import Connect from "../components/connect";
+
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
 
 // set to DevNet if in development
-const network = process.env.NODE_ENV === "development" ? new StacksMocknet() : new StacksMainnet();
+const network =
+  process.env.NODE_ENV === "development"
+    ? new StacksMocknet()
+    : new StacksMainnet();
 
-export default function Home({ available }) {
+export default function Home({ props }) {
   const [user, setUser] = useState({});
   const [tx, setTx] = useState("");
   const [claimed, setClaimed] = useState(false);
+  const [available, setAvailable] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -148,8 +155,8 @@ export default function Home({ available }) {
       },
       network,
       onFinish: (data) => {
-        console.log('Transaction ID:', data.txId);
-        console.log('Raw transaction:', data.txRaw);
+        console.log("Transaction ID:", data.txId);
+        console.log("Raw transaction:", data.txRaw);
 
         setTx(data.txId);
         setIsLoading(false);
@@ -178,15 +185,18 @@ export default function Home({ available }) {
   }
 
   return (
-    <Container maxW="xl" p="2">
+    <Container maxW="480px" p="2">
       <Head>
         <title>Claim your exclusive Bitcoin NFT</title>
       </Head>
 
+      <Header />
+      <NFTPreview claimed={claimed} available={available} />
+      {tx === "" && !claimed && <Connect />}
+
       <Box
         borderWidth="1px"
         borderRadius="lg"
-        bg="gray.800"
         fontWeight="semibold"
         letterSpacing="wide"
         fontSize="xs"
@@ -194,30 +204,11 @@ export default function Home({ available }) {
         position="relative"
       >
         {claimed && <Confetti height="550px" />}
-        {claimed && (
-          <Tag position="absolute" top="500px" left="23%" colorScheme="green">
-            {`Congrats! You got one of only 100 NFTs`}
-          </Tag>
-        )}
-        {!claimed && (
-          <Tag position="absolute" top="10px" right="10px" colorScheme="cyan">
-            {`Limited to 100! Only ${100 - available} left`}
-          </Tag>
-        )}
-        <Box bg="gray.500" alt="nft" objectFit="cover">
-          <video
-            width="auto"
-            height="100%"
-            src="nft1.webm"
-            type="video/webm"
-            preload="true"
-            autoPlay
-            loop
-            muted
-          />
-        </Box>
         {tx === "" && claimed && renderClaimView()}
-        {(tx !== "" || !claimed) && renderFinishView()}
+        {Object.keys(user).length > 0 &&
+          tx !== "" &&
+          !claimed &&
+          renderFinishView()}
       </Box>
     </Container>
   );
@@ -228,7 +219,10 @@ async function checkIfClaimed(principal) {
 
   const apiConfig = new Configuration({
     fetchApi: fetch,
-    basePath: process.env.NODE_ENV === "development" ? "http://localhost:3999" : "https://stacks-node-api.mainnet.stacks.co",
+    basePath:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3999"
+        : "https://stacks-node-api.mainnet.stacks.co",
   });
 
   // initiate the /accounts API with the basepath and fetch library
@@ -253,6 +247,8 @@ async function checkIfClaimed(principal) {
       return acc;
     }, 0);
 
+  setAvailable();
+
   return swagAvailable > 0;
 }
 
@@ -276,7 +272,7 @@ async function getContractData() {
 }
 
 export async function getStaticProps() {
-  const available = await getContractData();
+  const available = { value: true }; // await getContractData();
 
   return {
     props: {
