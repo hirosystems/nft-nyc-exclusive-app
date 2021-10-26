@@ -1,11 +1,11 @@
 [project]
-name = "."
-requirements = []
+name = "nft-nyc-exclusive"
 costs_version = 1
-[contracts.nft-nyc-exclusive]
-path = "contracts/nft-nyc-exclusive.clar"
-depends_on = ["nft-trait"]
 
 [contracts.nft-trait]
-path = "contracts/nft-trait.clar"
 depends_on = []
+path = "contracts/nft-trait.clar"
+
+[contracts.nft-nyc-exclusive]
+depends_on = ["nft-trait"]
+path = "contracts/nft-nyc-exclusive.clar"

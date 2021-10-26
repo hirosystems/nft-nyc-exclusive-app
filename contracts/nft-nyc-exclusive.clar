@@ -51,7 +51,7 @@
     (count (var-get last-id))
     (balance (balance-of tx-sender))
   )
-    (asserts! (< count MAX-TOKENS) (err ERR-ALL-MINTED))  ;; check that there are still tokens available
+    (asserts! (<= count MAX-TOKENS) (err ERR-ALL-MINTED))  ;; check that there are still tokens available
     (asserts! (is-eq balance u0) (err ERR-ALREADY-OWNED)) ;; check that the sender doesn't already own one
     (try! (mint-next))
     (ok true)
@@ -87,4 +87,4 @@
   (default-to u0 (map-get? tokens-count account)))
 
 ;; initialize
-(var-set token-uri "https://www.hiro.so/")
+(var-set token-uri "https://www.hiro.so")
