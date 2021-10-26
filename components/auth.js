@@ -1,22 +1,11 @@
 import { Text, Center, VStack } from "@chakra-ui/react";
-import { AppConfig, UserSession, showConnect } from "@stacks/connect";
 
+import { authWithConnect } from "../lib/helpers";
 import PrimaryButton from "./primaryButton";
 
-const appConfig = new AppConfig(["store_write", "publish_data"]);
-const userSession = new UserSession({ appConfig });
-
 function authenticate() {
-  showConnect({
-    appDetails: {
-      name: "Hiro's Special Edition Bitcoin NFT",
-      icon: window.location.origin + "/hiro-logo.png",
-    },
-    redirectTo: "/",
-    finished: () => {
-      window.location.reload();
-    },
-    userSession: userSession,
+  authWithConnect(() => {
+    window.location.reload();
   });
 }
 
@@ -30,6 +19,7 @@ export const Authenticate = (props) => {
         <PrimaryButton
           text="Connect Hiro Wallet for web"
           onClick={authenticate}
+          enabled={true}
         />
       </VStack>
     </Center>

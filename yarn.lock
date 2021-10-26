@@ -951,6 +951,15 @@
     buffer "^6.0.3"
     cross-fetch "^3.1.4"
 
+"@stacks/connect-react@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@stacks/connect-react/-/connect-react-13.0.0.tgz#1553fa640c83b5085ff205208c69e5ccbe6bf825"
+  integrity sha512-nlykqkbc9XLsNV0WGmgn6A9w6tBm+olZNpOzUhEozFnTdQG1ki42g60+G0OJdDtykpz7hLQ4xJwnd2CUgSerAQ==
+  dependencies:
+    "@stacks/auth" "2.0.1"
+    "@stacks/connect" "6.2.0"
+    jsontokens "^3.0.0"
+
 "@stacks/connect-ui@5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@stacks/connect-ui/-/connect-ui-5.2.0.tgz#b475029823a6bc3ebc8fda27acfc583527347cce"
@@ -958,7 +967,7 @@
   dependencies:
     "@stencil/core" "^2.6.0"
 
-"@stacks/connect@^6.2.0":
+"@stacks/connect@6.2.0", "@stacks/connect@^6.2.0":
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@stacks/connect/-/connect-6.2.0.tgz#d1e34524aa80149ceb9d312a3c8eb2d3e166d9df"
   integrity sha512-5Go9D4OmkKkwycd244pkl2Zh060YN/1EAHkQa/jpSF2mH2aESXnKpjA0CIpEuhfas7IvcFqHVpa7OdJc6Qkk/w==
@@ -2963,13 +2972,6 @@ react-clientside-effect@^1.2.2:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-confetti@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/react-confetti/-/react-confetti-6.0.1.tgz#d4f57b5a021dd908a6243b8f63b6009b00818d10"
-  integrity sha512-ZpOTBrqSNhWE4rRXCZ6E6U+wGd7iYHF5MGrqwikoiBpgBq9Akdu0DcLW+FdFnLjyZYC+VfAiV2KeFgYRMyMrkA==
-  dependencies:
-    tween-functions "^1.2.0"
-
 react-dom@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
@@ -3459,11 +3461,6 @@ tty-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.1.tgz#3f05251ee17904dfd0677546670db9651682b811"
   integrity sha512-C3TaO7K81YvjCgQH9Q1S3R3P3BtN3RIM8n+OvX4il1K1zgE8ZhI0op7kClgkxtutIE8hQrcrHBXvIheqKUUCxw==
-
-tween-functions@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
-  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
 
 type-fest@^0.7.1:
   version "0.7.1"

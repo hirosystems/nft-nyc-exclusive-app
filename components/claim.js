@@ -12,7 +12,7 @@ export const ClaimNFT = (props) => {
         <Text className="headerLabel" px={2} py={6}>
           Claim Hiro’s Special Edition Bitcoin NFT
         </Text>
-        <PrimaryButton text="Claim NFT" onClick={claim} />
+        <PrimaryButton text="Claim NFT" onClick={claim} enabled={props.enabled} />
         <Text className="subText" px={2} py={6}>
           New to Stacks?{" "}
           <Link

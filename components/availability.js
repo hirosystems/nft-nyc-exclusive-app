@@ -1,6 +1,6 @@
 import { Tag } from "@chakra-ui/react";
 
-export const Availability = ({ claimed, available }) => {
+export const Availability = ({ claimed, count }) => {
   return (
     <div>
       {claimed && (
@@ -10,13 +10,11 @@ export const Availability = ({ claimed, available }) => {
       )}
       {!claimed && (
         <Tag position="absolute" top="475px" right="37%" className="claimTag">
-          {`${available} / 1,000 claimed`}
+          {`${count} / 1,000 claimed`}
         </Tag>
       )}
     </div>
   );
 };
-
-//TODO: Call get last tokenID '< 1000'
 
 export default Availability;

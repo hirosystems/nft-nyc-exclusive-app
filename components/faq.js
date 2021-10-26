@@ -8,18 +8,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-const faqTitles = [
-  "Why do I need a wallet?",
-  "Why do I need STX tokens?",
-  "How do I mint the NFT?",
-  "How do I view my NFT?",
-];
-const faqAnswers = [
-  "In order to receive an NFT on Stacks, you must have a Stacks wallet. We recommend the Hiro Wallet for web (Chrome, Brave or Firefox).",
-  "You will need to pay a small gas fee to receive your NFT (< 1 STX). The gas token of the Stacks blockchain is the STX token. Learn more about how to obtain STX at StacksToken.com.",
-  "Click the 'Mint' button to receive your NFT! Review the transaction in your wallet and click Accept to mint your token.",
-  "You can view your NFT at STXNFT.com. Enter your Stacks address and the site will display all NFTs owned by the account.",
-];
+import { FAQ_TITLES, FAQ_ANSWERS } from "../lib/constants";
 
 export const FAQ = () => {
   return (
@@ -28,7 +17,7 @@ export const FAQ = () => {
         FAQ
       </Text>
       <Accordion allowMultiple>
-        {faqTitles.map((title, index) => (
+        {FAQ_TITLES.map((title, index) => (
           <AccordionItem key={index}>
             <h2>
               <AccordionButton>
@@ -38,7 +27,7 @@ export const FAQ = () => {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>{faqAnswers[index]}</AccordionPanel>
+            <AccordionPanel pb={4}>{FAQ_ANSWERS[index]}</AccordionPanel>
           </AccordionItem>
         ))}
       </Accordion>
