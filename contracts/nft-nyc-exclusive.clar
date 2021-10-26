@@ -44,14 +44,34 @@
         error (nft-transfer-err error))
       ERR-NOT-AUTHORIZED))
 
-;; Claim a new nft-nyc-exclusive token.
-(define-public (claim-swag)
-  (if 
-    (and 
-      (< (var-get last-id) MAX-TOKENS)
-      (is-eq (balance-of tx-sender) u0))
-        (ok (mint tx-sender))
-        (err ERR-ALL-MINTED)))
+
+;; mint a new nft-nyc-exclusive token
+(define-public (mint)
+  (let (
+    (count (var-get last-id))
+    (balance (balance-of tx-sender))
+  )
+    (asserts! (< count MAX-TOKENS) (err ERR-ALL-MINTED))  ;; check that there are still tokens available
+    (asserts! (is-eq balance u0) (err ERR-ALREADY-OWNED)) ;; check that the sender doesn't already own one
+    (try! (mint-next))
+    (ok true)
+  )
+)
+
+(define-private (mint-next)
+  (let (
+    (next-id (+ u1 (var-get last-id)))
+  )
+    (match (nft-mint? nft-nyc-exclusive next-id tx-sender)
+      success (begin
+        (map-set tokens-count tx-sender u1)
+        (var-set last-id next-id)
+        (ok success)
+      )
+      error (err ERR-ALREADY-OWNED)
+    )
+  )
+)
 
 (define-private (nft-transfer-err (code uint))
   (if (is-eq u1 code)
@@ -62,27 +82,9 @@
         ERR-NOT-FOUND
         (err code)))))
 
-(define-private (nft-mint-err (code uint))
-  (if (is-eq u1 code)
-    ERR-ALREADY-OWNED
-    (err code)))
-
 ;; Internal - Gets the amount of tokens owned by the specified address.
 (define-private (balance-of (account principal))
   (default-to u0 (map-get? tokens-count account)))
-
-;; Internal - Register token
-(define-private (mint (new-owner principal))
-    (let ((current-balance (balance-of new-owner)) (next-id (+ u1 (var-get last-id))))
-      (match (nft-mint? nft-nyc-exclusive next-id new-owner)
-        success
-          (begin
-            (map-set tokens-count
-              new-owner
-              (+ u1 current-balance))
-            (var-set last-id next-id)
-            (ok success))
-        error (nft-mint-err error))))
 
 ;; initialize
 (var-set token-uri "https://www.hiro.so/")
