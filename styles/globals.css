@@ -28,14 +28,22 @@ a {
   font-weight: normal;
   font-size: 32px;
   line-height: 44px;
-  /* or 137% */
   display: flex;
   align-items: center;
   text-align: center;
   letter-spacing: -0.02em;
   font-feature-settings: 'ss01'on;
+  color: #0C0C0D;
+}
 
-  /* Grey/Black */
+.faqHeader {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 32px;
+  line-height: 44px;
+  display: flex;
+  letter-spacing: -0.02em;
+  font-feature-settings: 'ss01'on;
   color: #0C0C0D;
 }
 
@@ -52,6 +60,10 @@ a {
   text-align: center;
   letter-spacing: -0.01em;
   color: #FFFFFF !important;
+}
+
+.primaryButton:hover {
+  background: #3124be !important;
 }
 
 .subText {

@@ -17,4 +17,6 @@ export const Availability = ({ claimed, available }) => {
   );
 };
 
+//TODO: Call get last tokenID '< 1000'
+
 export default Availability;

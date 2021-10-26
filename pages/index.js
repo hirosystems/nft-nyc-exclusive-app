@@ -1,10 +1,5 @@
 import Head from "next/head";
-import {
-  AppConfig,
-  UserSession,
-  showConnect,
-  openContractCall,
-} from "@stacks/connect";
+import { AppConfig, UserSession, openContractCall } from "@stacks/connect";
 import {
   Container,
   Text,
@@ -18,22 +13,22 @@ import {
 import Confetti from "react-confetti";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import { StacksMainnet, StacksMocknet } from "@stacks/network";
 import { callReadOnlyFunction, cvToValue } from "@stacks/transactions";
 import { Configuration, AccountsApi } from "@stacks/blockchain-api-client";
 
 import Header from "../components/Header";
 import NFTPreview from "../components/nftpreview";
-import Connect from "../components/connect";
+import Authenticate from "../components/auth";
+import ClaimNFT from "../components/claim";
+import FAQ from "../components/faq";
+
+import { getNetwork } from "../lib/helpers";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
 
 // set to DevNet if in development
-const network =
-  process.env.NODE_ENV === "development"
-    ? new StacksMocknet()
-    : new StacksMainnet();
+const network = getNetwork();
 
 export default function Home({ props }) {
   const [user, setUser] = useState({});
@@ -44,11 +39,13 @@ export default function Home({ props }) {
 
   useEffect(() => {
     if (userSession.isSignInPending()) {
+      // redirect after successful sign in
       userSession.handlePendingSignIn().then((userData) => {
         window.history.replaceState({}, document.title, "/");
         setUser(userData);
       });
     } else if (userSession.isUserSignedIn()) {
+      // user is signed in
       setUser(getUserData());
     }
   }, [userSession]);
@@ -147,10 +144,10 @@ export default function Home({ props }) {
     const options = {
       contractAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
       contractName: "nft-nyc-exclusive",
-      functionName: "claim-swag",
+      functionName: "mint",
       functionArgs: [],
       appDetails: {
-        name: "Exclusive Bitcoin NFT for NFT.NYC",
+        name: "Hiro's Special Edition Bitcoin NFT",
         icon: window.location.origin + "/hiro-icon-black.png",
       },
       network,
@@ -166,20 +163,6 @@ export default function Home({ props }) {
     await openContractCall(options);
   }
 
-  function authenticate() {
-    showConnect({
-      appDetails: {
-        name: "Exclusive Bitcoin NFT for NFT.NYC",
-        icon: window.location.origin + "/hiro-icon-black.png",
-      },
-      redirectTo: "/",
-      finished: () => {
-        window.location.reload();
-      },
-      userSession: userSession,
-    });
-  }
-
   function getUserData() {
     return userSession.loadUserData();
   }
@@ -192,7 +175,11 @@ export default function Home({ props }) {
 
       <Header />
       <NFTPreview claimed={claimed} available={available} />
-      {tx === "" && !claimed && <Connect />}
+      {Object.keys(user).length === 0 && tx === "" && !claimed && (
+        <Authenticate />
+      )}
+      {Object.keys(user).length > 0 && tx === "" && !claimed && <ClaimNFT />}
+      <FAQ />
 
       <Box
         borderWidth="1px"

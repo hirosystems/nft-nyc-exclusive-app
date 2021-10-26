@@ -1,8 +1,8 @@
 import { Button } from "@chakra-ui/react";
 
-export const PrimaryButton = ({ text }) => {
+export const PrimaryButton = ({ text, onClick }) => {
   return (
-    <Button colorScheme="blue" className="primaryButton">
+    <Button colorScheme="blue" className="primaryButton" onClick={() => onClick()}>
       {text}
     </Button>
   );
