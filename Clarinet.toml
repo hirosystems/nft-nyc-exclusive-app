@@ -1,0 +1,11 @@
+[project]
+name = "."
+requirements = []
+costs_version = 1
+[contracts.nft-nyc-exclusive]
+path = "contracts/nft-nyc-exclusive.clar"
+depends_on = ["nft-trait"]
+
+[contracts.nft-trait]
+path = "contracts/nft-trait.clar"
+depends_on = []
