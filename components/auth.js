@@ -1,25 +1,26 @@
 import { Text, Center, VStack } from "@chakra-ui/react";
-
-import { authWithConnect } from "../lib/helpers";
+import { useConnect } from "@stacks/connect-react";
 import PrimaryButton from "./primaryButton";
 
-function authenticate() {
-  authWithConnect(() => {
-    window.location.reload();
-  });
-}
+import { APP_NAME, AUTH_BUTTON_TEXT } from "../lib/constants";
 
-export const Authenticate = (props) => {
+export const Authenticate = ({ onStart, isLoading }) => {
+  const { doOpenAuth } = useConnect();
+
   return (
     <Center>
       <VStack>
         <Text className="headerLabel" px={2} py={6}>
-          Claim Hiro’s Special Edition Bitcoin NFT
+          {APP_NAME}
         </Text>
         <PrimaryButton
-          text="Connect Hiro Wallet for web"
-          onClick={authenticate}
+          text={AUTH_BUTTON_TEXT}
+          onClick={() => {
+            onStart();
+            doOpenAuth();
+          }}
           enabled={true}
+          loading={isLoading}
         />
       </VStack>
     </Center>

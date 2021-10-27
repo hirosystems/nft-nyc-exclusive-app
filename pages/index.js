@@ -1,5 +1,7 @@
+import React from "react";
 import Head from "next/head";
 import { AppConfig, UserSession } from "@stacks/connect";
+import { Connect } from "@stacks/connect-react";
 import { Container, useToast } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
@@ -15,7 +17,7 @@ import {
   isBroadcasted,
   getNFTCount,
 } from "../lib/helpers";
-import { APP_NAME, APP_WIDTH } from "../lib/constants";
+import { APP_NAME, APP_LOGO, APP_WIDTH } from "../lib/constants";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
@@ -24,7 +26,7 @@ export default function Home() {
   const [user, setUser] = useState({});
   const [tx, setTx] = useState("");
   const [claimed, setClaimed] = useState(false);
-  const [count, setCount] = useState(NaN);
+  const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [enabled, setEnabled] = useState(false);
 
@@ -36,7 +38,6 @@ export default function Home() {
     if (userSession.isSignInPending()) {
       // redirect after successful sign in
       userSession.handlePendingSignIn().then((userData) => {
-        console.log(userData);
         window.history.replaceState({}, document.title, "/");
         setUser(userData);
       });
@@ -59,6 +60,7 @@ export default function Home() {
     setIsLoading(true);
     setCount(
       await getNFTCount(user, (err) => {
+        console.log(err);
         toast({
           title: "Could not load NFT count",
           description: err.message,
@@ -72,23 +74,48 @@ export default function Home() {
     setIsLoading(false);
   }, [userSession]);
 
-  return (
-    <Container maxW={APP_WIDTH} p="2">
-      <Head>
-        <title>{APP_NAME}</title>
-      </Head>
+  const authOptions = {
+    redirectTo: "/",
+    userSession,
+    onFinish: (payload) => {
+      setUser(payload);
+      setIsLoading(false);
+    },
+    onCancel: () => {
+      setIsLoading(false);
+    },
+    appDetails: {
+      name: APP_NAME,
+      icon: `/${APP_LOGO}`,
+    },
+  };
 
-      <Header />
-      <NFTPreview claimed={claimed} count={count} />
-      {renderCTA()}
-      <FAQ />
-    </Container>
+  return (
+    <Connect authOptions={authOptions}>
+      <Container maxW={APP_WIDTH} p="2">
+        <Head>
+          <title>{APP_NAME}</title>
+        </Head>
+
+        <Header />
+        <NFTPreview claimed={claimed} count={count} />
+        {renderCTA()}
+        <FAQ />
+      </Container>
+    </Connect>
   );
 
   function renderCTA() {
     // if not signed in
     if (!isLoggedIn(user)) {
-      return <Authenticate />;
+      return (
+        <Authenticate
+          onStart={() => {
+            setIsLoading(true);
+          }}
+          isLoading={isLoading}
+        />
+      );
     }
 
     // if signed in, not claimed, no transaction
