@@ -9,6 +9,7 @@ import Header from "../components/header";
 import NFTPreview from "../components/nftpreview";
 import Authenticate from "../components/auth";
 import ClaimNFT from "../components/claim";
+import ClaimSuccess from "../components/claimsuccess";
 import FAQ from "../components/faq";
 
 import {
@@ -17,7 +18,14 @@ import {
   isBroadcasted,
   getNFTCount,
 } from "../lib/helpers";
-import { APP_NAME, APP_LOGO, APP_WIDTH } from "../lib/constants";
+import {
+  APP_NAME,
+  APP_LOGO,
+  APP_WIDTH,
+  CONTRACT_PRINCIPAL,
+  CONTRACT_ID,
+  CONTRACT_CLAIM_METHOD,
+} from "../lib/constants";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
 const userSession = new UserSession({ appConfig });
@@ -51,7 +59,19 @@ export default function Home() {
   // check if user already claimed NFT
   useEffect(async () => {
     setIsLoading(true);
-    setClaimed(await isBroadcasted(user));
+    setClaimed(
+      await isBroadcasted(user, (err) => {
+        console.log(err);
+        toast({
+          title: "Could not load account details",
+          description: err.message,
+          status: "error",
+          duration: 10000,
+        });
+        // disable minting
+        setEnabled(false);
+      })
+    );
     setIsLoading(false);
   }, [userSession]);
 
@@ -90,6 +110,21 @@ export default function Home() {
     },
   };
 
+  const claimOptions = {
+    contractAddress: CONTRACT_PRINCIPAL,
+    contractName: CONTRACT_ID,
+    functionName: CONTRACT_CLAIM_METHOD,
+    functionArgs: [],
+    onFinish: (data) => {
+      // success
+      console.log(resp);
+      setIsLoading(false);
+    },
+    onCancel: () => {
+      setIsLoading(false);
+    },
+  };
+
   return (
     <Connect authOptions={authOptions}>
       <Container maxW={APP_WIDTH} p="2">
@@ -120,9 +155,23 @@ export default function Home() {
 
     // if signed in, not claimed, no transaction
     if (isLoggedIn(user) && !claimed && tx === "") {
-      return <ClaimNFT enabled={enabled} />;
+      return (
+        <ClaimNFT
+          enabled={true}
+          claimOptions={claimOptions}
+          onStart={() => {
+            setIsLoading(true);
+          }}
+          isLoading={isLoading}
+        />
+      );
     }
     // TODO: if signed in, not claimed, transaction pending
+
+    // TODO: claimed
+    if (isLoggedIn(user) && claimed && tx !== "") {
+      <ClaimSuccess />;
+    }
   }
 }
 
