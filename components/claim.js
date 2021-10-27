@@ -19,6 +19,7 @@ export const ClaimNFT = ({ enabled, claimOptions, onStart, isLoading }) => {
             onStart();
             doContractCall(claimOptions);
           }}
+          green={true}
           enabled={enabled}
           loading={isLoading}
         />

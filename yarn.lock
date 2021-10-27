@@ -2929,6 +2929,13 @@ react-clientside-effect@^1.2.2:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
+react-device-detect@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-2.1.2.tgz#60abb6fa361ec4cc839469a0c4c3e9b8ea17d6b5"
+  integrity sha512-N42xttwez3ECgu4KpOL2ICesdfoz8NCBfmc1rH9FRYSjH7NmMyANPSrQ3EvAtJyj/6TzJNhrANSO38iXjCB2Ug==
+  dependencies:
+    ua-parser-js "^0.7.30"
+
 react-dom@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
@@ -3399,6 +3406,11 @@ typeforce@^1.11.3, typeforce@^1.11.5:
   version "1.18.0"
   resolved "https://registry.npmjs.org/typeforce/-/typeforce-1.18.0.tgz"
   integrity sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==
+
+ua-parser-js@^0.7.30:
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.31.tgz#649a656b191dffab4f21d5e053e27ca17cbff5c6"
+  integrity sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==
 
 unbox-primitive@^1.0.0:
   version "1.0.1"

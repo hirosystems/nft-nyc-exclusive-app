@@ -1,10 +1,15 @@
 import { Button } from "@chakra-ui/react";
 
-export const PrimaryButton = ({ text, onClick, enabled, loading = false }) => {
+export const PrimaryButton = ({
+  text,
+  onClick,
+  enabled,
+  loading = false,
+  green,
+}) => {
   return (
     <Button
-      colorScheme="blue"
-      className="primaryButton"
+      className={`primaryButton${green ? " greenButton" : ""}`}
       isDisabled={!enabled}
       isLoading={loading}
       onClick={() => (enabled ? onClick() : null)}

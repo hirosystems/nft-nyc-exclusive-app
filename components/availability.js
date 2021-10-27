@@ -1,18 +1,15 @@
 import { Tag } from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
 export const Availability = ({ claimed, count }) => {
   return (
-    <div>
+    <div className={`availableWrapper ${claimed ? "tag-claimed" : ""}`}>
       {claimed && (
-        <Tag position="absolute" top="475px" right="37%" colorScheme="green">
-          {`Congrats! You got one of only 100 NFTs`}
+        <Tag className="claimTag">
+          <CheckCircleIcon pr={2} w={6} h={6} color="green.400" /> {`Claimed`}
         </Tag>
       )}
-      {!claimed && (
-        <Tag position="absolute" top="475px" right="37%" className="claimTag">
-          {`${count} / 1,000 claimed`}
-        </Tag>
-      )}
+      {!claimed && <Tag className="claimTag">{`${count} / 1000 claimed`}</Tag>}
     </div>
   );
 };

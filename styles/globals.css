@@ -15,42 +15,69 @@ a {
   box-sizing: border-box;
 }
 
+.availableWrapper {
+  position: absolute;
+  top: 475px;
+  right: 33%;
+  left: 33%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.tag-claimed {
+  top: 210px;
+  transition: all 0.3s ease-in-out;
+}
+
 .claimTag {
   border-radius: 90px !important;
   background: rgba(27, 32, 43, 0.93) !important;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
-  padding: 10px !important;
+  padding: 10px 14px !important;
   color: #fff !important;
+}
+
+.nft-video {
+  width: 430px;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.nft-claimed {
+  height: 165px !important;
+  transition: all 0.3s ease-in-out;
 }
 
 .headerLabel {
   font-style: normal;
   font-weight: normal;
-  font-size: 32px;
-  line-height: 44px;
+  font-size: 27px;
+  line-height: 40px;
   display: flex;
   align-items: center;
   text-align: center;
   letter-spacing: -0.02em;
-  font-feature-settings: 'ss01'on;
-  color: #0C0C0D;
+  font-feature-settings: "ss01" on;
+  color: #0c0c0d;
 }
 
 .faqHeader {
   font-style: normal;
   font-weight: normal;
-  font-size: 32px;
-  line-height: 44px;
+  font-size: 27px;
+  line-height: 40px;
   display: flex;
   letter-spacing: -0.02em;
-  font-feature-settings: 'ss01'on;
-  color: #0C0C0D;
+  font-feature-settings: "ss01" on;
+  color: #0c0c0d;
 }
 
 .primaryButton {
   width: 100% !important;
   padding: 16px 32px;
-  background: #5546FF !important;
+  background: #5546ff !important;
   border-radius: 10px !important;
   font-family: Inter;
   font-style: normal;
@@ -59,16 +86,24 @@ a {
   line-height: 20px !important;
   text-align: center;
   letter-spacing: -0.01em;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .primaryButton:hover {
   background: #3124be !important;
 }
 
+.greenButton {
+  background: #22a15b !important;
+}
+
+.greenButton:hover {
+  background: #0f8544 !important;
+}
+
 .subText {
   font-size: 16px;
   line-height: 24px;
   letter-spacing: -0.01em;
-  color: #74777D !important;
+  color: #74777d !important;
 }

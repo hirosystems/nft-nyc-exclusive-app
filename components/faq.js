@@ -13,7 +13,7 @@ import { FAQ_TITLES, FAQ_ANSWERS } from "../lib/constants";
 export const FAQ = () => {
   return (
     <div>
-      <Text className="faqHeader" textAlign="left" px={2} py={6}>
+      <Text className="faqHeader" textAlign="left" px={4} pt={10} pb={6}>
         FAQ
       </Text>
       <Accordion allowMultiple>

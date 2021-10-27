@@ -4,8 +4,10 @@ import { AppConfig, UserSession } from "@stacks/connect";
 import { Connect } from "@stacks/connect-react";
 import { Container, useToast } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { isMobile } from "react-device-detect";
 
 import Header from "../components/header";
+import MobileNote from "../components/mobilenote";
 import NFTPreview from "../components/nftpreview";
 import Authenticate from "../components/auth";
 import ClaimNFT from "../components/claim";
@@ -25,6 +27,8 @@ import {
   CONTRACT_PRINCIPAL,
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
+  MOBILE_ERROR_MESSAGE,
+  MOBILE_ERROR_TITLE,
 } from "../lib/constants";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
@@ -127,15 +131,15 @@ export default function Home() {
 
   return (
     <Connect authOptions={authOptions}>
-      <Container maxW={APP_WIDTH} p="2">
+      <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
         <Head>
           <title>{APP_NAME}</title>
         </Head>
-
         <Header />
         <NFTPreview claimed={claimed} count={count} />
-        {renderCTA()}
-        <FAQ />
+        {isMobile && <MobileNote />}
+        {!isMobile && renderCTA()}
+        {!claimed && <FAQ />}
       </Container>
     </Connect>
   );
