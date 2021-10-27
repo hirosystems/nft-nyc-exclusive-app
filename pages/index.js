@@ -5,7 +5,7 @@ import { Connect } from "@stacks/connect-react";
 import { Container, useToast } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
-import Header from "../components/Header";
+import Header from "../components/header";
 import NFTPreview from "../components/nftpreview";
 import Authenticate from "../components/auth";
 import ClaimNFT from "../components/claim";
