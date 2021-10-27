@@ -5,8 +5,10 @@ import {
   Chain,
   Account,
   types,
-} from "https://deno.land/x/clarinet@v0.18.0/index.ts";
+} from "https://deno.land/x/clarinet@v0.18.3/index.ts";
 import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
+
+import { testnetAddresses } from "./lib/addresses.ts";
 
 Clarinet.test({
   name: "it initializes the contract metadata",
@@ -40,7 +42,7 @@ Clarinet.test({
     ]);
 
     // contract returns (ok true)
-    let result = block.receipts[0].result;
+    const result = block.receipts[0].result;
     result.expectOk().expectBool(true);
   },
 });
@@ -61,8 +63,9 @@ Clarinet.test({
     ]);
 
     // the contract returns an error
-    let result = block.receipts[0].result;
-    result.expectErr();
+    const result = block.receipts[0].result;
+
+    result.expectErr().expectUint(401);
   },
 });
 
@@ -77,7 +80,8 @@ Clarinet.test({
     ]);
 
     // contract returns (ok true)
-    let result = block.receipts[0].result;
+    const result = block.receipts[0].result;
+
     result.expectOk().expectBool(true);
   },
 });
@@ -97,7 +101,8 @@ Clarinet.test({
     }
 
     // the second block should return an error
-    let result = block.receipts[0].result;
+    const result = block.receipts[0].result;
+
     result.expectErr();
   },
 });
@@ -184,7 +189,7 @@ Clarinet.test({
     ]);
 
     // the function returns (ok true)
-    let result = block.receipts[0].result;
+    const result = block.receipts[0].result;
 
     result.expectOk().expectBool(true);
 
@@ -225,12 +230,100 @@ Clarinet.test({
     ]);
 
     // the function returns (error u405)
-    let result = block.receipts[0].result;
+    const result = block.receipts[0].result;
 
     result.expectErr().expectUint(405);
   },
 });
 
-// fails if a wallet tries to transfer a token it doesn't own
-// fails if a token doesn't exist
-// stops minting after 1000 tokens have been created
+Clarinet.test({
+  name: "it fails if a wallet tries to transfer a token it doesn't own",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    let account = accounts.get("wallet_1")!;
+    let account2 = accounts.get("wallet_2")!;
+
+    // wallet_1 mints an NFT
+    let block = chain.mineBlock([
+      Tx.contractCall("nft-nyc-exclusive", "mint", [], account.address),
+    ]);
+
+    // wallet_2 transfers the NFT to wallet_2
+    block = chain.mineBlock([
+      Tx.contractCall(
+        "nft-nyc-exclusive",
+        "transfer",
+        [
+          types.uint(1),
+          types.principal(account.address),
+          types.principal(account2.address),
+        ],
+        account2.address
+      ),
+    ]);
+
+    // the function returns (error 401)
+    const result = block.receipts[0].result;
+
+    result.expectErr().expectUint(401);
+  },
+});
+
+Clarinet.test({
+  name: "it fails if a token doesn't exist",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    let account = accounts.get("wallet_1")!;
+    let account2 = accounts.get("wallet_2")!;
+
+    // wallet_1 mints an NFT with id u1
+    let block = chain.mineBlock([
+      Tx.contractCall("nft-nyc-exclusive", "mint", [], account.address),
+    ]);
+
+    // wallet_1 transfers NFT with id u2 to wallet_2
+    block = chain.mineBlock([
+      Tx.contractCall(
+        "nft-nyc-exclusive",
+        "transfer",
+        [
+          types.uint(2),
+          types.principal(account.address),
+          types.principal(account2.address),
+        ],
+        account.address
+      ),
+    ]);
+
+    // the function returns (err 404)
+    const result = block.receipts[0].result;
+
+    result.expectErr().expectUint(404);
+  },
+});
+
+Clarinet.test({
+  name: "it stops minting after 1000 tokens have been created",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    let account = accounts.get("wallet_1")!;
+
+    let apes = testnetAddresses();
+
+    let block!: Block;
+
+    // each address mints an NFT, exhausting the total supply
+    apes.forEach((ape: string) => {
+      block = chain.mineBlock([
+        Tx.contractCall("nft-nyc-exclusive", "mint", [], ape),
+      ]);
+    });
+
+    // wallet_1 tries to mint an NFT
+    block = chain.mineBlock([
+      Tx.contractCall("nft-nyc-exclusive", "mint", [], account.address),
+    ]);
+
+    // the contract returns (err 403)
+    const result = block.receipts[0].result;
+
+    result.expectErr().expectUint(403);
+  },
+});

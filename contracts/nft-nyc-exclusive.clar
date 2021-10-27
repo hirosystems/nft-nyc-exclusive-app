@@ -31,7 +31,7 @@
 (define-public (set-token-uri (value (string-ascii 256)))
   (if (is-eq tx-sender CONTRACT-OWNER)
     (ok (var-set token-uri value))
-    (err ERR-NOT-AUTHORIZED)
+    ERR-NOT-AUTHORIZED
   )
 )
 
@@ -51,8 +51,8 @@
     (count (var-get last-id))
     (balance (balance-of tx-sender))
   )
-    (asserts! (<= count MAX-TOKENS) (err ERR-ALL-MINTED))  ;; check that there are still tokens available
-    (asserts! (is-eq balance u0) (err ERR-ALREADY-OWNED)) ;; check that the sender doesn't already own one
+    (asserts! (<= count MAX-TOKENS) ERR-ALL-MINTED)  ;; check that there are still tokens available
+    (asserts! (is-eq balance u0) ERR-ALREADY-OWNED) ;; check that the sender doesn't already own one
     (try! (mint-next))
     (ok true)
   )
@@ -68,7 +68,7 @@
         (var-set last-id next-id)
         (ok success)
       )
-      error (err ERR-ALREADY-OWNED)
+      error ERR-ALREADY-OWNED
     )
   )
 )
