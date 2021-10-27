@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { AppConfig, UserSession } from "@stacks/connect";
 import { Connect } from "@stacks/connect-react";
+import { MicroStacksProvider } from "micro-stacks/react";
 import { Container, useToast } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { isMobile } from "react-device-detect";
@@ -19,6 +20,7 @@ import {
   isLoggedIn,
   isBroadcasted,
   getNFTCount,
+  getNetwork,
 } from "../lib/helpers";
 import {
   APP_NAME,
@@ -27,8 +29,6 @@ import {
   CONTRACT_PRINCIPAL,
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
-  MOBILE_ERROR_MESSAGE,
-  MOBILE_ERROR_TITLE,
 } from "../lib/constants";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
@@ -36,7 +36,7 @@ const userSession = new UserSession({ appConfig });
 
 export default function Home() {
   const [user, setUser] = useState({});
-  const [tx, setTx] = useState("");
+  const [tx, setTx] = useState("jkwelfkl3");
   const [claimed, setClaimed] = useState(false);
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +83,7 @@ export default function Home() {
   useEffect(async () => {
     setIsLoading(true);
     setCount(
-      await getNFTCount(user, (err) => {
+      await getNFTCount((err) => {
         console.log(err);
         toast({
           title: "Could not load NFT count",
@@ -119,9 +119,13 @@ export default function Home() {
     contractName: CONTRACT_ID,
     functionName: CONTRACT_CLAIM_METHOD,
     functionArgs: [],
+    network: getNetwork(),
     onFinish: (data) => {
       // success
-      console.log(resp);
+      console.log("Transaction ID:", data.txId);
+      console.log("Raw transaction:", data.txRaw);
+
+      setTx(data.txId);
       setIsLoading(false);
     },
     onCancel: () => {
@@ -136,10 +140,10 @@ export default function Home() {
           <title>{APP_NAME}</title>
         </Head>
         <Header />
-        <NFTPreview claimed={claimed} count={count} />
+        <NFTPreview claimed={claimed || tx.length > 0} count={count} />
         {isMobile && <MobileNote />}
         {!isMobile && renderCTA()}
-        {!claimed && <FAQ />}
+        {!claimed && tx.length === 0 && <FAQ />}
       </Container>
     </Connect>
   );
@@ -156,9 +160,8 @@ export default function Home() {
         />
       );
     }
-
     // if signed in, not claimed, no transaction
-    if (isLoggedIn(user) && !claimed && tx === "") {
+    else if (isLoggedIn(user) && !claimed && tx.length === 0) {
       return (
         <ClaimNFT
           enabled={true}
@@ -170,22 +173,9 @@ export default function Home() {
         />
       );
     }
-    // TODO: if signed in, not claimed, transaction pending
-
-    // TODO: claimed
-    if (isLoggedIn(user) && claimed && tx !== "") {
-      <ClaimSuccess />;
+    // TODO: if signed in and claimed or transaction pending
+    else if (isLoggedIn(user) && (claimed || tx.length > 0)) {
+      return <ClaimSuccess user={user} />;
     }
   }
-}
-
-async function claimToken() {
-  setIsLoading(true);
-  await claimNFT((data) => {
-    console.log("Transaction ID:", data.txId);
-    console.log("Raw transaction:", data.txRaw);
-
-    setTx(data.txId);
-    setIsLoading(false);
-  });
 }

@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 export const PrimaryButton = ({
   text,
@@ -10,6 +11,7 @@ export const PrimaryButton = ({
   return (
     <Button
       className={`primaryButton${green ? " greenButton" : ""}`}
+      rightIcon={green ? <ArrowForwardIcon /> : null}
       isDisabled={!enabled}
       isLoading={loading}
       onClick={() => (enabled ? onClick() : null)}
