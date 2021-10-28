@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { MicroStacksProvider, useUserData, useAuth } from 'micro-stacks/react';
 import { Container } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
 import { isMobile } from 'react-device-detect';
 import { getServerSideQueryProps } from 'jotai-query-toolkit/nextjs';
 import Header from '../components/header';
@@ -23,13 +23,13 @@ import {
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
 } from '../lib/constants';
-import { nftCountQuery, useNftClaimed, useNftCount, useNftCountEnabled } from '../lib/store';
+import { nftCountQuery, useNftCount, nftClaimedState, useNftCountEnabled } from '../lib/store';
 import { SafeSuspense } from '../components/safe-suspense';
 
 function Home() {
   const { isSignedIn } = useAuth();
   const user = useUserData();
-  const [claimed, setClaimed] = useNftClaimed();
+  const [claimed, setClaimed] = useAtom(nftClaimedState);
   const [count] = useNftCount();
   const [enabled] = useNftCountEnabled(false);
 
