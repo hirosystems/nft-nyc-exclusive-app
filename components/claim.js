@@ -1,11 +1,11 @@
-import { useConnect } from "@stacks/connect-react";
 import { Text, Center, VStack, Link } from "@chakra-ui/react";
 import PrimaryButton from "./primaryButton";
 
 import { APP_NAME } from "../lib/constants";
+import {useTransactionPopup} from "micro-stacks/react";
 
 export const ClaimNFT = ({ enabled, claimOptions, onStart, isLoading }) => {
-  const { doContractCall } = useConnect();
+  const { handleContractCall } = useTransactionPopup();
 
   return (
     <Center>
@@ -17,7 +17,7 @@ export const ClaimNFT = ({ enabled, claimOptions, onStart, isLoading }) => {
           text="Claim NFT"
           onClick={() => {
             onStart();
-            doContractCall(claimOptions);
+            void handleContractCall(claimOptions);
           }}
           green={true}
           enabled={enabled}
