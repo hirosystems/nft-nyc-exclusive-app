@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "ENV=development next dev",
-    "staging": "ENV=staging next start",
+    "dev": "next dev",
     "start": "next start"
   },
   "engines": {
