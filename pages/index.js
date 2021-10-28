@@ -31,7 +31,7 @@ function Home() {
   const [tx, setTx] = useState('');
   const [claimed] = useNftClaimed();
   const [count] = useNftCount();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [enabled] = useNftCountEnabled(false);
 
   const claimOptions = {
@@ -68,11 +68,9 @@ function Home() {
   );
 
   function renderCTA() {
-    if (!enabled) {
-      return <ClaimDisabled />;
-    }
+    if (!enabled) return <ClaimDisabled />;
     // if not signed in
-    else if (!isLoggedIn(user)) {
+    if (!isLoggedIn(user))
       return (
         <Authenticate
           onStart={() => {
@@ -81,7 +79,6 @@ function Home() {
           isLoading={isLoading}
         />
       );
-    }
     // if signed in, not claimed, no transaction
     else if (isLoggedIn(user) && !claimed && tx.length === 0) {
       return (
