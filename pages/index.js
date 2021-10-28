@@ -36,7 +36,7 @@ const userSession = new UserSession({ appConfig });
 
 export default function Home() {
   const [user, setUser] = useState({});
-  const [tx, setTx] = useState("jkwelfkl3");
+  const [tx, setTx] = useState("");
   const [claimed, setClaimed] = useState(false);
   const [count, setCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
