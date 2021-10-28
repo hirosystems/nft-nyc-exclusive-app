@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { isMobile } from "react-device-detect";
 
 import Header from "../components/header";
+import SkeletonView from "../components/skeletonview";
 import MobileNote from "../components/mobilenote";
 import NFTPreview from "../components/nftpreview";
 import Authenticate from "../components/auth";
@@ -39,8 +40,8 @@ export default function Home() {
   const [user, setUser] = useState({});
   const [tx, setTx] = useState("");
   const [claimed, setClaimed] = useState(false);
-  const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [count, setCount] = useState(NaN);
+  const [isLoading, setIsLoading] = useState(true);
   const [enabled, setEnabled] = useState(false);
 
   const toast = useToast();
@@ -152,9 +153,10 @@ export default function Home() {
         </Head>
         <Header />
         <NFTPreview claimed={claimed || tx.length > 0} count={count} />
+        {isNaN(count) && <SkeletonView />}
         {isMobile && <MobileNote />}
-        {!isMobile && renderCTA()}
-        {enabled && !claimed && tx.length === 0 && <FAQ />}
+        {!isMobile && !isNaN(count) && renderCTA()}
+        {!isNaN(count) && enabled && !claimed && tx.length === 0 && <FAQ />}
       </Container>
     </Connect>
   );
