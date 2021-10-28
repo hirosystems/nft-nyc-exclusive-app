@@ -1,112 +1,37 @@
-import React from "react";
-import Head from "next/head";
-import { AppConfig, UserSession } from "@stacks/connect";
-import { Connect } from "@stacks/connect-react";
-import { MicroStacksProvider } from "micro-stacks/react";
-import { Container, useToast } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { isMobile } from "react-device-detect";
+import React from 'react';
+import Head from 'next/head';
+import { MicroStacksProvider, useUser } from 'micro-stacks/react';
+import { Container } from '@chakra-ui/react';
+import { useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { getServerSideQueryProps } from 'jotai-query-toolkit/nextjs';
+import Header from '../components/header';
+import SkeletonView from '../components/skeletonview';
+import MobileNote from '../components/mobilenote';
+import NFTPreview from '../components/nftpreview';
+import Authenticate from '../components/auth';
+import ClaimNFT from '../components/claim';
+import ClaimSuccess from '../components/claimsuccess';
+import ClaimDisabled from '../components/claimdisabled';
+import FAQ from '../components/faq';
 
-import Header from "../components/header";
-import SkeletonView from "../components/skeletonview";
-import MobileNote from "../components/mobilenote";
-import NFTPreview from "../components/nftpreview";
-import Authenticate from "../components/auth";
-import ClaimNFT from "../components/claim";
-import ClaimSuccess from "../components/claimsuccess";
-import ClaimDisabled from "../components/claimdisabled";
-import FAQ from "../components/faq";
-
-import {
-  isLoggedIn,
-  isBroadcasted,
-  getNFTCount,
-  getNetwork,
-  getNetworkPrincipal,
-} from "../lib/helpers";
+import { isLoggedIn, getNetwork, getNetworkPrincipal } from '../lib/helpers';
 import {
   APP_NAME,
   APP_LOGO,
   APP_WIDTH,
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
-  MAX_TOKEN_AMOUNT,
-} from "../lib/constants";
+} from '../lib/constants';
+import { nftCountQuery, useNftClaimed, useNftCount, useNftCountEnabled } from '../lib/store';
 
-const appConfig = new AppConfig(["store_write", "publish_data"]);
-const userSession = new UserSession({ appConfig });
-
-export default function Home() {
-  const [user, setUser] = useState({});
-  const [tx, setTx] = useState("");
-  const [claimed, setClaimed] = useState(false);
-  const [count, setCount] = useState(NaN);
+function Home() {
+  const user = useUser();
+  const [tx, setTx] = useState('');
+  const [claimed] = useNftClaimed();
+  const [count] = useNftCount();
   const [isLoading, setIsLoading] = useState(true);
-  const [enabled, setEnabled] = useState(false);
-
-  const toast = useToast();
-
-  // check if user is logged in
-  useEffect(() => {
-    setIsLoading(true);
-    if (userSession.isSignInPending()) {
-      // redirect after successful sign in
-      userSession.handlePendingSignIn().then((userData) => {
-        window.history.replaceState({}, document.title, "/");
-        setUser(userData);
-      });
-    } else if (userSession.isUserSignedIn()) {
-      // user is signed in
-      setUser(userSession.loadUserData());
-    }
-    setIsLoading(false);
-  }, [userSession]);
-
-  // check if user already claimed NFT
-  useEffect(async () => {
-    setIsLoading(true);
-    setClaimed(
-      await isBroadcasted(user, (err) => {
-        console.log(err);
-        toast({
-          title: "Could not load account details",
-          description: err.message,
-          status: "error",
-          duration: 10000,
-        });
-        // disable minting
-        setEnabled(false);
-      })
-    );
-    setIsLoading(false);
-  }, [userSession]);
-
-  // check how many NFTs are minted
-  useEffect(async () => {
-    setIsLoading(true);
-    const newCount = await getNFTCount((err) => {
-      console.log(err);
-      toast({
-        title: "Could not load NFT count",
-        description: err.message,
-        status: "error",
-        duration: 10000,
-      });
-      // disable minting
-      setEnabled(false);
-    });
-
-    setCount(newCount);
-
-    // disbale minting if max amount is reached
-    if (newCount >= MAX_TOKEN_AMOUNT) {
-      setEnabled(false);
-    } else {
-      setEnabled(true);
-    }
-
-    setIsLoading(false);
-  }, [userSession]);
+  const [enabled] = useNftCountEnabled(false);
 
   const claimOptions = {
     contractAddress: getNetworkPrincipal(),
@@ -114,10 +39,10 @@ export default function Home() {
     functionName: CONTRACT_CLAIM_METHOD,
     functionArgs: [],
     network: getNetwork(),
-    onFinish: (data) => {
+    onFinish: data => {
       // success
-      console.log("Transaction ID:", data.txId);
-      console.log("Raw transaction:", data.txRaw);
+      console.log('Transaction ID:', data.txId);
+      console.log('Raw transaction:', data.txRaw);
 
       setTx(data.txId);
       setIsLoading(false);
@@ -128,37 +53,17 @@ export default function Home() {
   };
 
   return (
-    <Connect
-      authOptions={{
-        redirectTo: "/",
-        userSession,
-        onFinish: (payload) => {
-          setUser(payload);
-          setIsLoading(false);
-        },
-        onCancel: () => {
-          setIsLoading(false);
-        },
-        appDetails: {
-          name: APP_NAME,
-          icon: `${
-            typeof window !== "undefined" ? window.location.href : ""
-          }/${APP_LOGO}`,
-        },
-      }}
-    >
-      <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
-        <Head>
-          <title>{APP_NAME}</title>
-        </Head>
-        <Header />
-        <NFTPreview claimed={claimed || tx.length > 0} count={count} />
-        {isNaN(count) && <SkeletonView />}
-        {isMobile && <MobileNote />}
-        {!isMobile && !isNaN(count) && renderCTA()}
-        {!isNaN(count) && enabled && !claimed && tx.length === 0 && <FAQ />}
-      </Container>
-    </Connect>
+    <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
+      <Head>
+        <title>{APP_NAME}</title>
+      </Head>
+      <Header />
+      <NFTPreview claimed={claimed || tx.length > 0} count={count} />
+      {isNaN(count) && <SkeletonView />}
+      {isMobile && <MobileNote />}
+      {!isMobile && !isNaN(count) && renderCTA()}
+      {!isNaN(count) && enabled && !claimed && tx.length === 0 && <FAQ />}
+    </Container>
   );
 
   function renderCTA() {
@@ -194,4 +99,22 @@ export default function Home() {
       return <ClaimSuccess user={user} />;
     }
   }
+}
+
+export const getServerSideProps = getServerSideQueryProps([nftCountQuery])();
+
+export default function HomePage() {
+  /** @type {import('micro-stacks/react').MicroStacksProvider} */
+  return (
+    <MicroStacksProvider
+      authOptions={{
+        appDetails: {
+          name: APP_NAME,
+          icon: `${typeof window !== 'undefined' ? window.location.href : ''}/${APP_LOGO}`,
+        },
+      }}
+    >
+      <Home />
+    </MicroStacksProvider>
+  );
 }
