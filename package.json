@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "ENV=development next dev",
     "staging": "ENV=staging next start",
-    "start": "ENV=production next start"
+    "start": "next start"
   },
   "engines": {
     "node": ">=14.15"
