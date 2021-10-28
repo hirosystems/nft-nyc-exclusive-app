@@ -24,6 +24,7 @@ import {
   CONTRACT_CLAIM_METHOD,
 } from '../lib/constants';
 import { nftCountQuery, useNftClaimed, useNftCount, useNftCountEnabled } from '../lib/store';
+import { SafeSuspense } from '../components/safe-suspense';
 
 function Home() {
   const user = useUser();
@@ -114,7 +115,12 @@ export default function HomePage() {
         },
       }}
     >
-      <Home />
+      <SafeSuspense
+        // this suspense boundary and fallback should really be lower in the tree, ideally wrapping _only_ the components that have any async atoms
+        fallback={<>MY LOADING SCREEN</>}
+      >
+        <Home />
+      </SafeSuspense>
     </MicroStacksProvider>
   );
 }
