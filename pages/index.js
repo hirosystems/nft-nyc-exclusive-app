@@ -100,6 +100,8 @@ export default function Home() {
     // disbale minting if max amount is reached
     if (newCount >= MAX_TOKEN_AMOUNT) {
       setEnabled(false);
+    } else {
+      setEnabled(true);
     }
 
     setIsLoading(false);
