@@ -21,12 +21,12 @@ import {
   isBroadcasted,
   getNFTCount,
   getNetwork,
+  getNetworkPrincipal,
 } from "../lib/helpers";
 import {
   APP_NAME,
   APP_LOGO,
   APP_WIDTH,
-  CONTRACT_PRINCIPAL,
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
   MAX_TOKEN_AMOUNT,
@@ -124,7 +124,7 @@ export default function Home() {
   };
 
   const claimOptions = {
-    contractAddress: CONTRACT_PRINCIPAL,
+    contractAddress: getNetworkPrincipal(),
     contractName: CONTRACT_ID,
     functionName: CONTRACT_CLAIM_METHOD,
     functionArgs: [],
