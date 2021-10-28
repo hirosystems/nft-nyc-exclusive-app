@@ -5,7 +5,7 @@ import { APP_NAME } from '../lib/constants';
 import { useTransactionPopup } from 'micro-stacks/react';
 
 export const ClaimNFT = ({ enabled, claimOptions }) => {
-  const { handleContractCall, isLoading } = useTransactionPopup();
+  const { handleContractCall } = useTransactionPopup();
 
   return (
     <Center>
@@ -18,7 +18,6 @@ export const ClaimNFT = ({ enabled, claimOptions }) => {
           onClick={() => handleContractCall(claimOptions)}
           green={true}
           enabled={enabled}
-          loading={isLoading}
         />
         <Text className="subText" px={2} py={6}>
           New to Stacks?{' '}

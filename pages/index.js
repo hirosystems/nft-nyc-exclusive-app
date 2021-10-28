@@ -39,12 +39,10 @@ function Home() {
     functionName: CONTRACT_CLAIM_METHOD,
     functionArgs: [],
     network: getNetwork(),
-    onFinish: data => {
+    onFinish: () => {
       setClaimed(true);
     },
   };
-
-  console.log(isSignedIn, claimed, !isMobile, count);
 
   return (
     <>
