@@ -11,6 +11,7 @@ export default class Document extends NextDocument {
           href="https://fontlibrary.org//face/open-sauce-one"
           type="text/css"
         />
+        <link rel="icon" type="image/png" href="hiro-favicon.png"></link>
         <body>
           <Main />
           <NextScript />

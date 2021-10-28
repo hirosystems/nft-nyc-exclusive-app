@@ -107,22 +107,6 @@ export default function Home() {
     setIsLoading(false);
   }, [userSession]);
 
-  const authOptions = {
-    redirectTo: "/",
-    userSession,
-    onFinish: (payload) => {
-      setUser(payload);
-      setIsLoading(false);
-    },
-    onCancel: () => {
-      setIsLoading(false);
-    },
-    appDetails: {
-      name: APP_NAME,
-      icon: `${window.location.href}/${APP_LOGO}`,
-    },
-  };
-
   const claimOptions = {
     contractAddress: getNetworkPrincipal(),
     contractName: CONTRACT_ID,
@@ -143,7 +127,25 @@ export default function Home() {
   };
 
   return (
-    <Connect authOptions={authOptions}>
+    <Connect
+      authOptions={{
+        redirectTo: "/",
+        userSession,
+        onFinish: (payload) => {
+          setUser(payload);
+          setIsLoading(false);
+        },
+        onCancel: () => {
+          setIsLoading(false);
+        },
+        appDetails: {
+          name: APP_NAME,
+          icon: `${
+            typeof window !== "undefined" ? window.location.href : ""
+          }/${APP_LOGO}`,
+        },
+      }}
+    >
       <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
         <Head>
           <title>{APP_NAME}</title>
