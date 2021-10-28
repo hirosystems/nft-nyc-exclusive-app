@@ -4,9 +4,10 @@
   "description": "Exclusive Bitcoin NFT minting app for NFT.NYC",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "dev": "ENV=development next dev",
+    "staging": "ENV=staging next start",
+    "start": "ENV=production next start"
   },
   "engines": {
     "node": ">=14.15"
