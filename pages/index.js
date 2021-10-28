@@ -119,7 +119,7 @@ export default function Home() {
     },
     appDetails: {
       name: APP_NAME,
-      icon: `/${APP_LOGO}`,
+      icon: `${window.location.href}/${APP_LOGO}`,
     },
   };
 
