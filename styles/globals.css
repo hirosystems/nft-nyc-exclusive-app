@@ -141,3 +141,14 @@ a {
   letter-spacing: -0.01em;
   color: #74777d;
 }
+
+.socialIcon {
+  background-color: transparent !important;
+  border: 1px solid #e5e5e5 !important;
+}
+
+.socialIcon:hover {
+  cursor: pointer;
+  background-color: #e5e5e5 !important;
+  border: 1px solid #cfcfcf !important;
+}

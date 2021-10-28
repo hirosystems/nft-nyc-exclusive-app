@@ -13,10 +13,10 @@ import NFTPreview from "../components/nftpreview";
 import Authenticate from "../components/auth";
 import ClaimNFT from "../components/claim";
 import ClaimSuccess from "../components/claimsuccess";
+import ClaimDisabled from "../components/claimdisabled";
 import FAQ from "../components/faq";
 
 import {
-  claimNFT,
   isLoggedIn,
   isBroadcasted,
   getNFTCount,
@@ -29,6 +29,7 @@ import {
   CONTRACT_PRINCIPAL,
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
+  MAX_TOKEN_AMOUNT,
 } from "../lib/constants";
 
 const appConfig = new AppConfig(["store_write", "publish_data"]);
@@ -82,19 +83,25 @@ export default function Home() {
   // check how many NFTs are minted
   useEffect(async () => {
     setIsLoading(true);
-    setCount(
-      await getNFTCount((err) => {
-        console.log(err);
-        toast({
-          title: "Could not load NFT count",
-          description: err.message,
-          status: "error",
-          duration: 10000,
-        });
-        // disable minting
-        setEnabled(false);
-      })
-    );
+    const newCount = await getNFTCount((err) => {
+      console.log(err);
+      toast({
+        title: "Could not load NFT count",
+        description: err.message,
+        status: "error",
+        duration: 10000,
+      });
+      // disable minting
+      setEnabled(false);
+    });
+
+    setCount(newCount);
+
+    // disbale minting if max amount is reached
+    if (newCount >= MAX_TOKEN_AMOUNT) {
+      setEnabled(false);
+    }
+
     setIsLoading(false);
   }, [userSession]);
 
@@ -143,14 +150,17 @@ export default function Home() {
         <NFTPreview claimed={claimed || tx.length > 0} count={count} />
         {isMobile && <MobileNote />}
         {!isMobile && renderCTA()}
-        {!claimed && tx.length === 0 && <FAQ />}
+        {enabled && !claimed && tx.length === 0 && <FAQ />}
       </Container>
     </Connect>
   );
 
   function renderCTA() {
+    if (!enabled) {
+      return <ClaimDisabled />;
+    }
     // if not signed in
-    if (!isLoggedIn(user)) {
+    else if (!isLoggedIn(user)) {
       return (
         <Authenticate
           onStart={() => {
@@ -173,7 +183,7 @@ export default function Home() {
         />
       );
     }
-    // TODO: if signed in and claimed or transaction pending
+    // if signed in and claimed or transaction pending
     else if (isLoggedIn(user) && (claimed || tx.length > 0)) {
       return <ClaimSuccess user={user} />;
     }
