@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { MicroStacksProvider, useUser } from 'micro-stacks/react';
+import { MicroStacksProvider, useUserData, useAuth } from 'micro-stacks/react';
 import { Container } from '@chakra-ui/react';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -15,7 +15,7 @@ import ClaimSuccess from '../components/claimsuccess';
 import ClaimDisabled from '../components/claimdisabled';
 import FAQ from '../components/faq';
 
-import { isLoggedIn, getNetwork, getNetworkPrincipal } from '../lib/helpers';
+import { getNetwork, getNetworkPrincipal } from '../lib/helpers';
 import {
   APP_NAME,
   APP_LOGO,
@@ -27,11 +27,10 @@ import { nftCountQuery, useNftClaimed, useNftCount, useNftCountEnabled } from '.
 import { SafeSuspense } from '../components/safe-suspense';
 
 function Home() {
-  const user = useUser();
-  const [tx, setTx] = useState('');
-  const [claimed] = useNftClaimed();
+  const { isSignedIn } = useAuth();
+  const user = useUserData();
+  const [claimed, setClaimed] = useNftClaimed();
   const [count] = useNftCount();
-  const [isLoading, setIsLoading] = useState(false);
   const [enabled] = useNftCountEnabled(false);
 
   const claimOptions = {
@@ -41,59 +40,30 @@ function Home() {
     functionArgs: [],
     network: getNetwork(),
     onFinish: data => {
-      // success
-      console.log('Transaction ID:', data.txId);
-      console.log('Raw transaction:', data.txRaw);
-
-      setTx(data.txId);
-      setIsLoading(false);
-    },
-    onCancel: () => {
-      setIsLoading(false);
+      setClaimed(true);
     },
   };
 
+  console.log(isSignedIn, claimed, !isMobile, count);
+
   return (
-    <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
-      <Head>
-        <title>{APP_NAME}</title>
-      </Head>
-      <Header />
-      <NFTPreview claimed={claimed || tx.length > 0} count={count} />
-      {isNaN(count) && <SkeletonView />}
-      {isMobile && <MobileNote />}
-      {!isMobile && !isNaN(count) && renderCTA()}
-      {!isNaN(count) && enabled && !claimed && tx.length === 0 && <FAQ />}
-    </Container>
+    <>
+      <NFTPreview claimed={claimed} count={count} />
+      {isMobile ? <MobileNote /> : renderCTA()}
+      {enabled && !claimed && <FAQ />}
+    </>
   );
 
   function renderCTA() {
     if (!enabled) return <ClaimDisabled />;
     // if not signed in
-    if (!isLoggedIn(user))
-      return (
-        <Authenticate
-          onStart={() => {
-            setIsLoading(true);
-          }}
-          isLoading={isLoading}
-        />
-      );
+    else if (!isSignedIn) return <Authenticate />;
     // if signed in, not claimed, no transaction
-    else if (isLoggedIn(user) && !claimed && tx.length === 0) {
-      return (
-        <ClaimNFT
-          enabled={true}
-          claimOptions={claimOptions}
-          onStart={() => {
-            setIsLoading(true);
-          }}
-          isLoading={isLoading}
-        />
-      );
+    else if (isSignedIn && !claimed) {
+      return <ClaimNFT enabled={enabled} claimOptions={claimOptions} />;
     }
     // if signed in and claimed or transaction pending
-    else if (isLoggedIn(user) && (claimed || tx.length > 0)) {
+    else if (isSignedIn && claimed) {
       return <ClaimSuccess user={user} />;
     }
   }
@@ -112,12 +82,23 @@ export default function HomePage() {
         },
       }}
     >
-      <SafeSuspense
-        // this suspense boundary and fallback should really be lower in the tree, ideally wrapping _only_ the components that have any async atoms
-        fallback={<>MY LOADING SCREEN</>}
-      >
-        <Home />
-      </SafeSuspense>
+      <Container maxW={APP_WIDTH} minW={APP_WIDTH} p="2">
+        <Head>
+          <title>{APP_NAME}</title>
+        </Head>
+        <Header />
+        <SafeSuspense
+          // this suspense boundary and fallback should really be lower in the tree, ideally wrapping _only_ the components that have any async atoms
+          fallback={
+            <>
+              <NFTPreview claimed={false} count={0} />
+              <SkeletonView />
+            </>
+          }
+        >
+          <Home />
+        </SafeSuspense>
+      </Container>
     </MicroStacksProvider>
   );
 }

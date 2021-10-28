@@ -1,11 +1,11 @@
-import { Text, Center, VStack } from "@chakra-ui/react";
-import PrimaryButton from "./primaryButton";
+import { Text, Center, VStack } from '@chakra-ui/react';
+import PrimaryButton from './primaryButton';
 
-import { APP_NAME, AUTH_BUTTON_TEXT } from "../lib/constants";
-import {useAuth} from "micro-stacks/react";
+import { APP_NAME, AUTH_BUTTON_TEXT } from '../lib/constants';
+import { useAuth } from 'micro-stacks/react';
 
-export const Authenticate = ({ onStart, isLoading }) => {
-  const { handleSignIn } = useAuth()
+export const Authenticate = () => {
+  const { handleSignIn, isLoading } = useAuth();
 
   return (
     <Center>
@@ -15,10 +15,7 @@ export const Authenticate = ({ onStart, isLoading }) => {
         </Text>
         <PrimaryButton
           text={AUTH_BUTTON_TEXT}
-          onClick={() => {
-            onStart();
-            handleSignIn();
-          }}
+          onClick={() => handleSignIn()}
           enabled={true}
           loading={isLoading}
         />
