@@ -1,5 +1,6 @@
-import "../styles/globals.css";
-import { ChakraProvider } from "@chakra-ui/react";
+import 'inter-ui/inter.css';
+import '../styles/globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function MyApp({ Component, pageProps }) {
   return (
