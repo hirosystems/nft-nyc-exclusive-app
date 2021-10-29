@@ -3,6 +3,7 @@ import PrimaryButton from './primaryButton';
 
 import { APP_NAME, AUTH_BUTTON_TEXT } from '../lib/constants';
 import { useAuth } from 'micro-stacks/react';
+import OnboardingLabel from './onboardingLabel';
 
 export const Authenticate = () => {
   const { handleSignIn, isLoading } = useAuth();
@@ -19,6 +20,7 @@ export const Authenticate = () => {
           enabled={true}
           loading={isLoading}
         />
+        <OnboardingLabel />
       </VStack>
     </Center>
   );
