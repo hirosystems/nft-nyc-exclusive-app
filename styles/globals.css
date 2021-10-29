@@ -2,7 +2,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "OpenSauceOneRegular";
+  font-family: 'OpenSauceOneRegular';
   background-color: white !important;
 }
 
@@ -59,7 +59,7 @@ a {
   align-items: center;
   text-align: center;
   letter-spacing: -0.02em;
-  font-feature-settings: "ss01" on;
+  font-feature-settings: 'ss01' on;
   color: #0c0c0d;
 }
 
@@ -70,7 +70,7 @@ a {
   line-height: 40px;
   display: flex;
   letter-spacing: -0.02em;
-  font-feature-settings: "ss01" on;
+  font-feature-settings: 'ss01' on;
   color: #0c0c0d;
 }
 
@@ -79,7 +79,7 @@ a {
   padding: 16px 32px;
   background: #5546ff !important;
   border-radius: 10px !important;
-  font-family: Inter;
+  font-family: Inter !important;
   font-style: normal;
   font-weight: 500 !important;
   font-size: 14px !important;
@@ -89,12 +89,16 @@ a {
   color: #ffffff !important;
 }
 
+.highlight {
+  filter: drop-shadow(0px 6px 24px rgba(85, 70, 255, 0.4));
+}
+
 .secondaryButton {
   width: 100% !important;
   padding: 16px 32px;
   background: #eef2fb !important;
   border-radius: 10px !important;
-  font-family: Inter;
+  font-family: Inter !important;
   font-style: normal;
   font-weight: 500 !important;
   font-size: 14px !important;
@@ -112,14 +116,6 @@ a {
   background: #3124be !important;
 }
 
-.greenButton {
-  background: #22a15b !important;
-}
-
-.greenButton:hover {
-  background: #0f8544 !important;
-}
-
 .subText {
   font-size: 16px;
   line-height: 24px;
@@ -131,7 +127,7 @@ a {
   font-size: 20px;
   line-height: 28px;
   letter-spacing: -0.01em;
-  font-feature-settings: "ss01" on;
+  font-feature-settings: 'ss01' on;
   color: #242629;
 }
 

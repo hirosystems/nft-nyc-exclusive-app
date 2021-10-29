@@ -16,8 +16,8 @@ export const ClaimNFT = ({ enabled, claimOptions }) => {
         </Text>
         <PrimaryButton
           text="Claim NFT"
+          highlighted={true}
           onClick={() => handleContractCall(claimOptions)}
-          green={true}
           enabled={enabled}
         />
         <OnboardingLabel />
