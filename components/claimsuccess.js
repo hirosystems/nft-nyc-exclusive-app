@@ -1,6 +1,6 @@
-import { Text, Center, VStack } from "@chakra-ui/react";
+import { Text, Center, VStack } from '@chakra-ui/react';
 
-import ListItem from "./listitem";
+import ListItem from './listitem';
 
 import {
   SUCCESS_TITLE,
@@ -8,9 +8,9 @@ import {
   SUCCESS_URL_TITLE,
   SUCCESS_URL_HREF,
   CLAIM_SUCCESS_LABEL,
-} from "../lib/constants";
+} from '../lib/constants';
 
-import { getUserAddress } from "../lib/helpers";
+import { getUserAddress } from '../lib/helpers';
 
 export const ClaimSuccess = ({ user }) => {
   return (
@@ -22,7 +22,7 @@ export const ClaimSuccess = ({ user }) => {
         {SUCCESS_TITLE.map((item, idx) => {
           // update stxnft url with user address
           let finalUrl = SUCCESS_URL_HREF[idx];
-          if (idx === 0) {
+          if (idx === 0 && user) {
             finalUrl += getUserAddress(user);
           }
 
