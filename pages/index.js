@@ -76,7 +76,7 @@ export default function HomePage() {
       authOptions={{
         appDetails: {
           name: APP_NAME,
-          icon: `${typeof window !== 'undefined' ? window.location.href : ''}/${APP_LOGO}`,
+          icon: `${typeof window !== 'undefined' ? window.location.href : ''}${APP_LOGO}`,
         },
       }}
     >
