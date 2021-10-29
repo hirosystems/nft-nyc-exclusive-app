@@ -23,13 +23,20 @@ import {
   CONTRACT_ID,
   CONTRACT_CLAIM_METHOD,
 } from '../lib/constants';
-import { nftCountQuery, useNftCount, nftClaimedState, useNftCountEnabled } from '../lib/store';
+import {
+  nftCountQuery,
+  useNftCount,
+  nftClaimedState,
+  claimTxState,
+  useNftCountEnabled,
+} from '../lib/store';
 import { SafeSuspense } from '../components/safe-suspense';
 
 function Home() {
   const { isSignedIn } = useAuth();
   const user = useUserData();
   const [claimed, setClaimed] = useAtom(nftClaimedState);
+  const [tx, setTx] = useAtom(claimTxState);
   const [count] = useNftCount();
   const [enabled] = useNftCountEnabled(false);
 
@@ -39,7 +46,8 @@ function Home() {
     functionName: CONTRACT_CLAIM_METHOD,
     functionArgs: [],
     network: getNetwork(),
-    onFinish: () => {
+    onFinish: data => {
+      setTx(data.txId);
       setClaimed(true);
     },
   };
@@ -62,7 +70,7 @@ function Home() {
     }
     // if signed in and claimed or transaction pending
     else if (isSignedIn && claimed) {
-      return <ClaimSuccess user={user} />;
+      return <ClaimSuccess user={user} txid={tx} />;
     }
   }
 }

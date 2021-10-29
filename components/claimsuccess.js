@@ -12,7 +12,7 @@ import {
 
 import { getUserAddress } from '../lib/helpers';
 
-export const ClaimSuccess = ({ user }) => {
+export const ClaimSuccess = ({ user, txid }) => {
   return (
     <Center>
       <VStack>
@@ -24,6 +24,16 @@ export const ClaimSuccess = ({ user }) => {
           let finalUrl = SUCCESS_URL_HREF[idx];
           if (idx === 0 && user) {
             finalUrl += getUserAddress(user);
+          }
+
+          // update explorer url with txid
+          if (idx === 1) {
+            if (txid.length > 0) {
+              // TODO: replace with mainnet
+              finalUrl += `${txid}?chain=testnet`;
+            } else {
+              return;
+            }
           }
 
           return (
