@@ -46,7 +46,7 @@ function Home() {
 
   return (
     <>
-      <NFTPreview claimed={claimed} count={count} />
+      <NFTPreview claimed={claimed} count={count} mobile={isMobile} />
       {isMobile ? <MobileNote /> : renderCTA()}
       {enabled && !claimed && <FAQ />}
     </>
@@ -89,7 +89,7 @@ export default function HomePage() {
           // this suspense boundary and fallback should really be lower in the tree, ideally wrapping _only_ the components that have any async atoms
           fallback={
             <>
-              <NFTPreview claimed={false} count={0} />
+              <NFTPreview claimed={false} count={0} mobile={isMobile} />
               <SkeletonView />
             </>
           }

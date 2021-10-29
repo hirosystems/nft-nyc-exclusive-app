@@ -18,11 +18,6 @@ a {
 .availableWrapper {
   position: absolute;
   top: 475px;
-  right: 33%;
-  left: 33%;
-  align-items: center;
-  display: flex;
-  justify-content: center;
 }
 
 .tag-claimed {
