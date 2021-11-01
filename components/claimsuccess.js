@@ -29,8 +29,7 @@ export const ClaimSuccess = ({ user, txid }) => {
           // update explorer url with txid
           if (idx === 1) {
             if (txid.length > 0) {
-              // TODO: replace with mainnet
-              finalUrl += `${txid}?chain=testnet`;
+              finalUrl += `${txid}?chain=mainnet`;
             } else {
               return;
             }
